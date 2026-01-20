@@ -1,12 +1,11 @@
 FROM php:8.3-fpm-alpine
 
-# Security: Create non-root user
-RUN addgroup -g 1000 www-data-custom && \
-    adduser -u 1000 -G www-data-custom -s /bin/sh -D www-data-custom
-
 # Install Dependencies
 RUN apk add --no-cache \
     zip \
+    unzip \
+    git \
+    curl \
     libzip-dev \
     libpng-dev \
     libjpeg-turbo-dev \
@@ -14,6 +13,9 @@ RUN apk add --no-cache \
     icu-dev \
     oniguruma-dev \
     mysql-client
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Configure PHP Extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -25,14 +27,18 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     exif \
     bcmath
 
-# Hardening: Disable Functions (Production)
-RUN echo "disable_functions = exec,system,shell_exec,passthru,proc_open,popen,pcntl_exec,parse_ini_file,show_source" > /usr/local/etc/php/conf.d/hardening.ini
-
 # Set Working Directory
 WORKDIR /var/www/html
 
-# Switch to non-root user
-USER www-data-custom
+# Copy application files
+COPY --chown=www-data:www-data . .
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose Port
 EXPOSE 9000
