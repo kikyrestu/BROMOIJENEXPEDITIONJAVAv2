@@ -9,7 +9,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-      - ./storage:/var/www/html/storage
+      - vendor_data:/var/www/html/vendor
     networks:
       - bromoijen_net
     depends_on:
@@ -55,3 +55,4 @@ networks:
 
 volumes:
   db_data:
+  vendor_data:
