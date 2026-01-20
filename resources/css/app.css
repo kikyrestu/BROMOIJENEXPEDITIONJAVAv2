@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+    /* Custom colors from config */
+    --color-brand-primary: #0f172a;
+    --color-brand-accent: #38bdf8;
+
+    /* Custom font */
+    --font-sans: 'Inter', sans-serif;
+}
+
+/* Custom utilities */
+.container-custom {
+    max-width: 80rem;
+    /* max-w-7xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+    .container-custom {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-custom {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
