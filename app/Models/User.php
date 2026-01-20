@@ -7,10 +7,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable, HasUuids, \Spatie\Permission\Traits\HasRoles;
+
+    /**
+     * Determine if the user can access the Filament admin panel.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Allow all authenticated users to access the admin panel
+        // You can add additional checks here, e.g.:
+        // return $this->hasRole('admin') || $this->hasRole('super_admin');
+        return true;
+    }
 
     /**
      * Get the columns that should receive a unique identifier.
