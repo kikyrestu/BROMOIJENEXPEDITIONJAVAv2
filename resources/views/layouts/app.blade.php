@@ -131,7 +131,7 @@
 <body class="font-sans antialiased text-brand-dark bg-white selection:bg-brand-accent selection:text-white overflow-x-hidden">
     
     {{-- Navbar (Gotur Style) --}}
-    <nav x-data="{ scrolled: false }" 
+    <nav x-data="{ scrolled: false, mobileMenuOpen: false }" 
          @scroll.window="scrolled = (window.pageYOffset > 20)"
          :class="{ 
             'bg-slate-900/95 backdrop-blur-sm shadow-lg': scrolled, 
@@ -139,25 +139,101 @@
             'bg-slate-900': !scrolled && !{{ request()->routeIs('home') ? 'true' : 'false' }}
          }"
          class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 font-sans">
-        <div class="container mx-auto px-6 md:px-12 lg:px-20">
-            <div class="flex justify-between items-center h-20">
-                <a href="{{ route('home') }}" class="flex items-center gap-2 text-2xl font-extrabold tracking-tighter text-white">
+        <div class="container mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                {{-- Logo --}}
+                <a href="{{ route('home') }}" class="flex items-center gap-2 text-xl md:text-2xl font-extrabold tracking-tighter text-white">
                     @if(!empty($logo))
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($logo) }}" alt="{{ $siteName }}" class="h-10 w-auto">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url($logo) }}" alt="{{ $siteName }}" class="h-8 md:h-10 w-auto">
                     @else
                         {{ strtoupper($siteName) }}
                     @endif
                 </a>
 
-                <div class="hidden md:flex space-x-6 items-center">
+                {{-- Desktop Navigation --}}
+                <div class="hidden lg:flex space-x-6 items-center">
                     @foreach($navMenus as $menu)
                         <x-navigation-item :menu="$menu" :level="0" />
                     @endforeach
                 </div>
 
+                {{-- Desktop CTA Button --}}
                 @if($headerBtnShow)
-                <div class="hidden md:block">
+                <div class="hidden lg:block">
                     <a href="{{ $headerBtnUrl }}" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-accent hover:bg-white hover:text-brand-accent text-white transition font-bold shadow-lg border-2 border-transparent hover:border-brand-accent">
+                        @if($headerBtnIcon && $headerBtnIconPos === 'left')
+                            @include('components.icons.' . $headerBtnIcon, ['class' => 'w-4 h-4'])
+                        @endif
+                        <span>{{ $headerBtnText }}</span>
+                        @if($headerBtnIcon && $headerBtnIconPos === 'right')
+                            @include('components.icons.' . $headerBtnIcon, ['class' => 'w-4 h-4'])
+                        @endif
+                    </a>
+                </div>
+                @endif
+
+                {{-- Mobile Menu Button --}}
+                <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-white/10 transition-colors"
+                        :aria-expanded="mobileMenuOpen"
+                        aria-label="Toggle mobile menu">
+                    <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile Menu Drawer --}}
+        <div x-show="mobileMenuOpen"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-4"
+             x-cloak
+             @click.outside="mobileMenuOpen = false"
+             class="lg:hidden absolute top-full left-0 w-full bg-slate-900/98 backdrop-blur-lg border-t border-white/10 shadow-2xl max-h-[80vh] overflow-y-auto">
+            <div class="container mx-auto px-4 py-6 space-y-2">
+                @foreach($navMenus as $menu)
+                    <div x-data="{ open: false }" class="border-b border-white/5 last:border-0">
+                        @if($menu->children->count() > 0)
+                            <button @click="open = !open" 
+                                    class="flex items-center justify-between w-full py-3 text-white hover:text-brand-accent transition-colors text-left">
+                                <span class="font-semibold">{{ $menu->title }}</span>
+                                <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div x-show="open" x-collapse class="pl-4 pb-3 space-y-1">
+                                @foreach($menu->children as $child)
+                                    <a href="{{ $child->url ?? '#' }}" 
+                                       @click="mobileMenuOpen = false"
+                                       class="block py-2 text-white/70 hover:text-brand-accent transition-colors text-sm">
+                                        {{ $child->title }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <a href="{{ $menu->url ?? '#' }}" 
+                               @click="mobileMenuOpen = false"
+                               class="block py-3 text-white hover:text-brand-accent transition-colors font-semibold">
+                                {{ $menu->title }}
+                            </a>
+                        @endif
+                    </div>
+                @endforeach
+                
+                {{-- Mobile CTA Button --}}
+                @if($headerBtnShow)
+                <div class="pt-4">
+                    <a href="{{ $headerBtnUrl }}" 
+                       @click="mobileMenuOpen = false"
+                       class="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-white transition font-bold shadow-lg">
                         @if($headerBtnIcon && $headerBtnIconPos === 'left')
                             @include('components.icons.' . $headerBtnIcon, ['class' => 'w-4 h-4'])
                         @endif
