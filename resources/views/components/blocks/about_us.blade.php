@@ -103,8 +103,8 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
                 </div>
 
                 {{-- Secondary Image (Floating Bottom Right) --}}
-                <div class="absolute -bottom-6 -right-2 md:right-8 lg:right-16 w-[45%] aspect-square bg-white p-2 rounded-tl-[30px] rounded-br-[30px] shadow-lg z-20 hidden md:block border border-slate-100">
-                     <img :src="secondaryImage" src="{{ $secondaryImageUrl }}" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
+                <div class="absolute -bottom-4 -right-2 sm:-bottom-6 md:right-8 lg:right-16 w-[35%] sm:w-[40%] md:w-[45%] aspect-square bg-white p-1.5 sm:p-2 rounded-tl-[20px] sm:rounded-tl-[30px] rounded-br-[20px] sm:rounded-br-[30px] shadow-lg z-20 border border-slate-100">
+                     <img :src="secondaryImage" src="{{ $secondaryImageUrl }}" class="w-full h-full object-cover rounded-tl-[16px] sm:rounded-tl-[24px] rounded-br-[16px] sm:rounded-br-[24px]">
                 </div>
 
                 {{-- Decorative Green Bar --}}

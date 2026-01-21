@@ -204,7 +204,7 @@
                         @if($menu->children->count() > 0)
                             <button @click="open = !open" 
                                     class="flex items-center justify-between w-full py-3 text-white hover:text-brand-accent transition-colors text-left">
-                                <span class="font-semibold">{{ $menu->title }}</span>
+                                <span class="font-semibold">{{ $menu->name }}</span>
                                 <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
@@ -214,7 +214,7 @@
                                     <a href="{{ $child->url ?? '#' }}" 
                                        @click="mobileMenuOpen = false"
                                        class="block py-2 text-white/70 hover:text-brand-accent transition-colors text-sm">
-                                        {{ $child->title }}
+                                        {{ $child->name }}
                                     </a>
                                 @endforeach
                             </div>
@@ -222,7 +222,7 @@
                             <a href="{{ $menu->url ?? '#' }}" 
                                @click="mobileMenuOpen = false"
                                class="block py-3 text-white hover:text-brand-accent transition-colors font-semibold">
-                                {{ $menu->title }}
+                                {{ $menu->name }}
                             </a>
                         @endif
                     </div>

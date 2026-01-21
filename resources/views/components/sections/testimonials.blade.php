@@ -68,14 +68,14 @@
                     
                     {{-- Testimonial 1 --}}
                     <div class="swiper-slide h-auto">
-                        <div class="bg-white p-8 rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
+                        <div class="bg-white p-5 sm:p-8 rounded-[24px] sm:rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
                             {{-- Google Icon (Decoration) --}}
-                            <div class="absolute top-8 right-8 text-brand-primary/10">
+                            <div class="absolute top-5 right-5 sm:top-8 sm:right-8 text-brand-primary/10">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-12-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/></svg> 
                             </div>
 
                             {{-- Stars --}}
-                            <div class="flex text-yellow-400 mb-6">
+                            <div class="flex text-yellow-400 mb-4 sm:mb-6">
                                 @for($i=0; $i<5; $i++)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
@@ -83,11 +83,11 @@
                                 @endfor
                             </div>
 
-                            <p class="text-slate-600 text-lg italic mb-8 leading-relaxed flex-1">
+                            <p class="text-slate-600 text-base sm:text-lg italic mb-6 sm:mb-8 leading-relaxed flex-1">
                                 "The Midnight Bromo Tour was absolutely breathtaking! The jeep ride, the sunrise, everything was perfectly organized. Our guide was very knowledgeable and friendly."
                             </p>
 
-                            <div class="flex items-center gap-4 mt-auto">
+                            <div class="flex items-center gap-3 sm:gap-4 mt-auto">
                                 <img src="https://ui-avatars.com/api/?name=Sarah+Jenner&background=random" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Sarah Jenner</h4>
@@ -99,11 +99,11 @@
 
                     {{-- Testimonial 2 --}}
                     <div class="swiper-slide h-auto">
-                        <div class="bg-white p-8 rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
-                             <div class="absolute top-8 right-8 text-brand-primary/10">
+                        <div class="bg-white p-5 sm:p-8 rounded-[24px] sm:rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
+                             <div class="absolute top-5 right-5 sm:top-8 sm:right-8 text-brand-primary/10">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-12-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/></svg> 
                             </div>
-                            <div class="flex text-yellow-400 mb-6">
+                            <div class="flex text-yellow-400 mb-4 sm:mb-6">
                                 @for($i=0; $i<5; $i++)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
@@ -111,11 +111,11 @@
                                 @endfor
                             </div>
 
-                            <p class="text-slate-600 text-lg italic mb-8 leading-relaxed flex-1">
+                            <p class="text-slate-600 text-base sm:text-lg italic mb-6 sm:mb-8 leading-relaxed flex-1">
                                 "Ijen Blue Fire was a challenging hike but totally worth it! BromoIjen team made sure we were safe and provided masks. Highly recommended service."
                             </p>
 
-                            <div class="flex items-center gap-4 mt-auto">
+                            <div class="flex items-center gap-3 sm:gap-4 mt-auto">
                                 <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=random" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Michael Chen</h4>
@@ -127,11 +127,11 @@
 
                     {{-- Testimonial 3 --}}
                     <div class="swiper-slide h-auto">
-                        <div class="bg-white p-8 rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
-                             <div class="absolute top-8 right-8 text-brand-primary/10">
+                        <div class="bg-white p-5 sm:p-8 rounded-[24px] sm:rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
+                             <div class="absolute top-5 right-5 sm:top-8 sm:right-8 text-brand-primary/10">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-12-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/></svg> 
                             </div>
-                            <div class="flex text-yellow-400 mb-6">
+                            <div class="flex text-yellow-400 mb-4 sm:mb-6">
                                 @for($i=0; $i<5; $i++)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
@@ -139,11 +139,11 @@
                                 @endfor
                             </div>
 
-                            <p class="text-slate-600 text-lg italic mb-8 leading-relaxed flex-1">
+                            <p class="text-slate-600 text-base sm:text-lg italic mb-6 sm:mb-8 leading-relaxed flex-1">
                                 "Booking was easy and the customer service was responsive via WhatsApp. The driver pick us up on time. A hassle-free experience!"
                             </p>
 
-                            <div class="flex items-center gap-4 mt-auto">
+                            <div class="flex items-center gap-3 sm:gap-4 mt-auto">
                                 <img src="https://ui-avatars.com/api/?name=Emma+Watson&background=random" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Emma Watson</h4>
@@ -154,11 +154,11 @@
                     </div>
                      {{-- Testimonial 4 --}}
                     <div class="swiper-slide h-auto">
-                        <div class="bg-white p-8 rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
-                             <div class="absolute top-8 right-8 text-brand-primary/10">
+                        <div class="bg-white p-5 sm:p-8 rounded-[24px] sm:rounded-[40px] shadow-lg border border-slate-50 h-full flex flex-col relative">
+                             <div class="absolute top-5 right-5 sm:top-8 sm:right-8 text-brand-primary/10">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-12-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"/></svg> 
                             </div>
-                            <div class="flex text-yellow-400 mb-6">
+                            <div class="flex text-yellow-400 mb-4 sm:mb-6">
                                 @for($i=0; $i<5; $i++)
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                                         <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
@@ -166,11 +166,11 @@
                                 @endfor
                             </div>
 
-                            <p class="text-slate-600 text-lg italic mb-8 leading-relaxed flex-1">
+                            <p class="text-slate-600 text-base sm:text-lg italic mb-6 sm:mb-8 leading-relaxed flex-1">
                                 "The scenery at Mount Bromo is unlike anything I've ever seen. BromoIjen Expedition handled everything perfectly."
                             </p>
 
-                            <div class="flex items-center gap-4 mt-auto">
+                            <div class="flex items-center gap-3 sm:gap-4 mt-auto">
                                 <img src="https://ui-avatars.com/api/?name=David+Kim&background=random" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">David Kim</h4>
