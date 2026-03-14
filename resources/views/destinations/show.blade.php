@@ -84,7 +84,7 @@
                         {{-- Price Tag --}}
                         @if($package->price)
                         <div class="absolute bottom-2 left-2 bg-brand-accent text-white font-bold px-3 py-1 rounded text-xs shadow-md">
-                            IDR {{ number_format($package->price/1000, 0) }}k
+                            IDR {{ number_format($package->price, 0, ',', '.') }}
                         </div>
                         @endif
                     </div>

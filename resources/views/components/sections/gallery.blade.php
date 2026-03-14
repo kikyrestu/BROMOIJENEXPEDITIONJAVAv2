@@ -23,7 +23,7 @@
     $sizes = ['large', 'small', 'small', 'tall', 'small', 'wide'];
 @endphp
 
-<section class="py-16 md:py-24 bg-white relative font-sans overflow-hidden" x-data="{ showLightbox: false, activeSrc: '', activeAlt: '' }">
+<section id="gallery" class="py-16 md:py-24 bg-white relative font-sans overflow-hidden" x-data="{ showLightbox: false, activeSrc: '', activeAlt: '' }">
     
     <div class="container mx-auto px-6 md:px-12 lg:px-20 relative z-10">
         

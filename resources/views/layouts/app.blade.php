@@ -413,10 +413,11 @@
                     <ul class="space-y-3">
                         @foreach([
                             ['label' => 'Home', 'url' => '/'],
-                            ['label' => 'Our Packages', 'url' => '#packages'],
-                            ['label' => 'Destinations', 'url' => '#destinations'],
-                            ['label' => 'Gallery', 'url' => '#gallery'],
-                            ['label' => 'About Us', 'url' => '#about'],
+                            ['label' => 'Our Packages', 'url' => '/#packages'],
+                            ['label' => 'Destinations', 'url' => '/#destinations'],
+                            ['label' => 'Gallery', 'url' => '/#gallery'],
+                            ['label' => 'Reviews', 'url' => '/reviews'],
+                            ['label' => 'About Us', 'url' => '/#aboutus'],
                         ] as $link)
                         <li>
                             <a href="{{ $link['url'] }}" class="text-slate-400 hover:text-brand-primary transition-colors duration-200 flex items-center gap-2 group">

@@ -89,7 +89,7 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
                             <source src="{{ $mediaUrl }}" type="video/mp4">
                         </video>
                     @else
-                        <img :src="mainImage" src="{{ $mediaUrl }}" class="w-full h-full object-cover">
+                        <img :src="mainImage" src="{{ $mediaUrl }}" alt="About Bromo Ijen Expedition" class="w-full h-full object-cover">
                     @endif
                     
                     {{-- Play Button Overlay --}}
@@ -104,7 +104,7 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
 
                 {{-- Secondary Image (Floating Bottom Right) --}}
                 <div class="absolute -bottom-4 -right-2 sm:-bottom-6 md:right-8 lg:right-16 w-[35%] sm:w-[40%] md:w-[45%] aspect-square bg-white p-1.5 sm:p-2 rounded-tl-[20px] sm:rounded-tl-[30px] rounded-br-[20px] sm:rounded-br-[30px] shadow-lg z-20 border border-slate-100">
-                     <img :src="secondaryImage" src="{{ $secondaryImageUrl }}" class="w-full h-full object-cover rounded-tl-[16px] sm:rounded-tl-[24px] rounded-br-[16px] sm:rounded-br-[24px]">
+                     <img :src="secondaryImage" src="{{ $secondaryImageUrl }}" alt="East Java Adventure Tours" class="w-full h-full object-cover rounded-tl-[16px] sm:rounded-tl-[24px] rounded-br-[16px] sm:rounded-br-[24px]">
                 </div>
 
                 {{-- Decorative Green Bar --}}

@@ -16,7 +16,7 @@
     }
 @endphp
 
-<section class="py-12 md:py-16 bg-white relative overflow-hidden">
+<section id="destinations" class="py-12 md:py-16 bg-white relative overflow-hidden">
     
     {{-- Decorative Background Float --}}
     <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>

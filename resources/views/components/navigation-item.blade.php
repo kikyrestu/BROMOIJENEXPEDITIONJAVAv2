@@ -26,7 +26,8 @@
                  x-transition:leave="transition ease-in duration-75"
                  x-transition:leave-start="transform opacity-100 scale-100"
                  x-transition:leave-end="transform opacity-0 scale-95"
-                 class="absolute left-0 mt-0 min-w-[14rem] w-max bg-white rounded-lg shadow-xl py-2 z-50 border border-gray-100 font-normal">
+                 x-ref="dropdown"
+                 class="absolute left-0 mt-0 min-w-[14rem] max-w-[20rem] bg-white rounded-lg shadow-xl py-2 z-50 border border-gray-100 font-normal">
                 @foreach($effectiveChildren as $child)
                     <x-navigation-item :menu="$child" :level="$level + 1" />
                 @endforeach
@@ -45,14 +46,14 @@
              x-data="{ subOpen: false, subTimer: null }"
              @mouseenter="clearTimeout(subTimer); subOpen = true"
              @mouseleave="subTimer = setTimeout(() => subOpen = false, 150)">
-            <button class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-brand-primary hover:text-white transition-colors text-left whitespace-nowrap">
+            <button class="w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-brand-primary hover:text-white transition-colors text-left">
                 <span>{{ $menu->name }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 ml-3 flex-shrink-0">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
             </button>
 
-            <!-- Submenu Flyout (Right side) -->
+            <!-- Submenu Flyout (Right side, repositions if near edge) -->
             <div x-show="subOpen"
                  x-transition:enter="transition ease-out duration-100"
                  x-transition:enter-start="transform opacity-0 translate-x-1"
@@ -60,7 +61,8 @@
                  x-transition:leave="transition ease-in duration-75"
                  x-transition:leave-start="transform opacity-100 translate-x-0"
                  x-transition:leave-end="transform opacity-0 translate-x-1"
-                 class="absolute left-full top-0 min-w-[14rem] w-max bg-white rounded-lg shadow-xl py-2 z-[60] border border-gray-100"
+                 x-ref="submenu"
+                 class="absolute left-full top-0 min-w-[14rem] max-w-[20rem] bg-white rounded-lg shadow-xl py-2 z-[60] border border-gray-100"
                  x-cloak>
                 @foreach($effectiveChildren as $child)
                     <x-navigation-item :menu="$child" :level="$level + 1" />
@@ -68,7 +70,7 @@
             </div>
         </div>
     @else
-        <a href="{{ $menu->link }}" target="{{ $menu->target }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-primary hover:text-white transition-colors whitespace-nowrap">
+        <a href="{{ $menu->link }}" target="{{ $menu->target }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-primary hover:text-white transition-colors">
             {{ $menu->name }}
         </a>
     @endif

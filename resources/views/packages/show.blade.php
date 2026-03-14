@@ -27,7 +27,7 @@
         @if($package->price_start_from)
         "offers": {
             "@type": "Offer",
-            "priceCurrency": "USD",
+            "priceCurrency": "IDR",
             "price": "{{ $package->price_start_from }}",
             "availability": "https://schema.org/InStock"
         },
@@ -48,7 +48,7 @@
     </script>
     @endpush
 
-    <div class="pt-32 pb-40 container mx-auto px-6 md:px-12 lg:px-20 font-sans text-slate-600">
+    <div class="pt-32 pb-16 container mx-auto px-6 md:px-12 lg:px-20 font-sans text-slate-600">
         
         {{-- TOP HEADER: Title & Share --}}
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
@@ -115,7 +115,7 @@
 
                 <div class="w-full lg:w-auto">
                     <button class="w-full lg:w-auto bg-brand-primary text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg hover:bg-green-600 transition-colors">
-                        IDR {{ number_format($package->price_start_from/1000, 0) }}k <span class="text-xs font-normal opacity-80">/Per Person</span>
+                        IDR {{ number_format($package->price_start_from, 0, ',', '.') }} <span class="text-xs font-normal opacity-80">/Per Person</span>
                     </button>
                 </div>
             </div>
@@ -506,11 +506,11 @@
                         <div class="border-t border-slate-100 pt-6">
                             <div class="flex justify-between items-center mb-2 text-sm">
                                 <span>Adult:</span>
-                                <span class="font-bold">IDR {{ number_format($package->price_start_from/1000, 0) }}k</span>
+                                <span class="font-bold">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                             </div>
                              <div class="flex justify-between items-center mb-6 text-lg font-extrabold text-brand-dark">
                                 <span>Total:</span>
-                                <span>IDR {{ number_format($package->price_start_from/1000, 0) }}k</span>
+                                <span>IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                             </div>
                             
                              <a :href="waLink" 
@@ -541,46 +541,126 @@
                         </div>
                     @endif
 
-                    {{-- DEBUG DATA AUDIT --}}
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            console.group('📦 Package Data Audit (From Backend)');
-                            console.log('ID:', {{ $package->id }});
-                            console.log('Name:', @json($package->name));
-                            console.log('Slug:', @json($package->slug));
-                            console.log('Map Embed URL:', @json($package->map_embed_url));
-                            console.log('Price:', {{ $package->price_start_from }});
-                            console.log('Duration:', @json($package->duration_days) + ' days');
-                            console.log('Inclusions:', @json($package->inclusions));
-                            console.log('Exclusions:', @json($package->exclusions));
-                            console.log('Itinerary Data:', @json($package->itinerary));
-                            console.log('Full Object:', @json($package));
-                            
-                            // Gallery Check
-                            const gallery = @json($package->gallery);
-                            console.group('🖼️ Gallery Audit');
-                            if (Array.isArray(gallery) && gallery.length > 0) {
-                                console.info(`✅ Gallery has ${gallery.length} images.`);
-                                gallery.forEach((img, idx) => console.log(`[${idx}]`, img));
-                            } else {
-                                console.warn('⚠️ Gallery array is EMPTY or NULL.');
-                            }
-                            console.groupEnd();
-
-                            if (!@json($package->map_embed_url)) {
-                                console.warn('⚠️ Map Embed URL is EMPTY directly from Backend!');
-                            } else {
-                                console.info('✅ Map Embed URL found:', @json($package->map_embed_url));
-                            }
-                            console.groupEnd();
-                        });
-                    </script>
+                    {{-- Related Blog Posts --}}
+                    @php
+                        $relatedBlogs = \App\Models\Blog::with('category')
+                            ->whereNotNull('published_at')
+                            ->latest('published_at')
+                            ->take(3)
+                            ->get();
+                    @endphp
+                    @if($relatedBlogs->count())
+                    <div class="mt-6">
+                        <h3 class="text-lg font-bold text-brand-dark mb-4">Latest Articles</h3>
+                        <div class="flex flex-col gap-4">
+                            @foreach($relatedBlogs as $blogPost)
+                            <a href="{{ route('blogs.show', $blogPost->slug) }}" class="group flex gap-3 items-start bg-white rounded-xl border border-slate-100 p-3 hover:shadow-md transition-all">
+                                <div class="w-20 h-16 rounded-lg overflow-hidden shrink-0">
+                                    <img src="{{ $blogPost->thumbnail_path ? asset('storage/' . $blogPost->thumbnail_path) : 'https://placehold.co/150x120?text=Blog' }}"
+                                         alt="{{ $blogPost->title }}" loading="lazy"
+                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <span class="text-[10px] font-bold text-brand-primary uppercase tracking-wider block mb-0.5">
+                                        {{ $blogPost->category->name ?? 'News' }}
+                                    </span>
+                                    <h4 class="text-sm font-bold text-slate-700 leading-snug group-hover:text-brand-primary transition-colors line-clamp-2">
+                                        {{ $blogPost->title }}
+                                    </h4>
+                                    <span class="text-[11px] text-slate-400 mt-1 block">{{ $blogPost->published_at?->format('d M, Y') }}</span>
+                                </div>
+                            </a>
+                            @endforeach
+                        </div>
+                        <a href="{{ route('blogs.index') }}" class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-brand-primary hover:text-brand-dark transition-colors">
+                            View All Articles
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+                        </a>
+                    </div>
+                    @endif
 
                 </div>
             </div>
 
         </div>
     </div>
+
+    {{-- Related Packages Section --}}
+    @if(isset($relatedPackages) && $relatedPackages->count())
+    <section class="py-16 bg-slate-50 font-sans">
+        <div class="container mx-auto px-6 md:px-12 lg:px-20">
+            <div class="text-center mb-10">
+                <span class="inline-block bg-orange-100 text-orange-500 font-hand text-xl px-4 py-1 rounded-full mb-2">Explore More</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-brand-dark">Other <span class="text-brand-primary font-hand italic">Packages</span></h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($relatedPackages as $relPkg)
+                <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    <div class="relative rounded-xl overflow-hidden aspect-[16/9] group-hover:opacity-95 transition-opacity">
+                        @php
+                            $relThumb = $relPkg->thumbnail;
+                            if(!empty($relThumb) && !str_starts_with($relThumb, 'http')) {
+                                $relThumb = \Illuminate\Support\Facades\Storage::url($relThumb);
+                            } elseif(empty($relThumb)) {
+                                $relThumb = 'https://placehold.co/800x600?text='.urlencode($relPkg->name);
+                            }
+                        @endphp
+                        <img src="{{ $relThumb }}" alt="{{ $relPkg->name }}" loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute top-2 left-2 flex flex-col gap-1">
+                            @if($relPkg->is_exclusive)
+                                <span class="bg-brand-accent text-white text-[9px] font-bold px-2 py-0.5 rounded">Exclusive</span>
+                            @endif
+                        </div>
+                        <div class="absolute bottom-2 left-2 bg-brand-accent text-white font-bold px-3 py-1 rounded text-xs shadow-md">
+                            IDR {{ number_format($relPkg->price_start_from, 0, ',', '.') }}
+                        </div>
+                    </div>
+                    <div class="pt-4 pb-2 flex-1 flex flex-col">
+                        <div class="flex items-center gap-1 mb-2">
+                            <div class="flex text-yellow-400 text-xs">
+                                @for($i=0; $i<5; $i++)
+                                    @if($i < round($relPkg->rating ?? 0))
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" /></svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-slate-200"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" /></svg>
+                                    @endif
+                                @endfor
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">({{ $relPkg->review_count ?? 0 }})</span>
+                        </div>
+                        <h3 class="text-base font-bold text-brand-dark leading-snug mb-2 line-clamp-2 group-hover:text-brand-primary transition-colors">
+                            <a href="{{ route('packages.show', $relPkg->slug) }}">{{ $relPkg->name }}</a>
+                        </h3>
+                        <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
+                            <div class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-brand-primary"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                                {{ $relPkg->destination->name ?? '' }}
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-brand-primary"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                {{ $relPkg->duration_days }} Days
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 mt-auto">
+                        <a href="{{ route('packages.show', $relPkg->slug) }}" class="flex items-center justify-center gap-2 py-2.5 rounded-full border border-brand-primary text-brand-dark font-bold text-xs hover:bg-brand-primary hover:text-white transition-all">
+                            View Details
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <div class="text-center mt-10">
+                <a href="{{ route('packages.index') }}" class="inline-flex items-center gap-2 px-8 py-3 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition-all">
+                    View All Packages
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Mobile Sticky CTA Bar --}}
     @php
@@ -591,7 +671,7 @@
         <div class="flex items-center justify-between gap-4">
             <div>
                 <span class="text-xs text-slate-500">Start from</span>
-                <div class="text-xl font-extrabold text-brand-dark">IDR {{ number_format($package->price_start_from/1000, 0) }}k</div>
+                <div class="text-xl font-extrabold text-brand-dark">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</div>
             </div>
             <a href="{{ $mobileWaLink }}" 
                target="_blank"

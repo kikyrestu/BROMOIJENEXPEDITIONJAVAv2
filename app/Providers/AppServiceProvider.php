@@ -28,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Media::observe(\App\Observers\MediaObserver::class);
         \App\Models\Gallery::observe(\App\Observers\GalleryObserver::class);
         \App\Models\Package::observe(\App\Observers\PackageObserver::class);
+        \App\Models\Blog::observe(\App\Observers\BlogObserver::class);
+        \App\Models\Destination::observe(\App\Observers\DestinationObserver::class);
+        \App\Models\Banner::observe(\App\Observers\BannerObserver::class);
     }
 }

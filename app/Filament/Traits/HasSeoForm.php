@@ -41,8 +41,10 @@ trait HasSeoForm
                         ->label('Open Graph Image')
                         ->image()
                         ->directory('seo-images')
-                        // ->optimize('webp'), // Disabled for local hardening (proc_open unavailable)
-                        ,
+                        ->maxSize(2048)
+                        ->imageResizeMode('cover')
+                        ->imageResizeTargetWidth(1200)
+                        ->imageResizeTargetHeight(630),
                 ])
                 ->collapsible()
                 ->collapsed(),

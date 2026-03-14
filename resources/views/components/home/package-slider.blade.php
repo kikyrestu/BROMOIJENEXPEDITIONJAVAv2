@@ -46,7 +46,7 @@
                                 <div class="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
                                     <div>
                                         <span class="text-xs text-slate-500 block">Start from</span>
-                                        <span class="text-lg font-bold text-white">IDR {{ number_format($package->price_start_from / 1000, 0) }}k</span>
+                                        <span class="text-lg font-bold text-white">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                                     </div>
                                     <a href="{{ route('packages.show', $package->slug) }}" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-brand-accent group-hover:text-slate-900 transition">
                                         &nearr;

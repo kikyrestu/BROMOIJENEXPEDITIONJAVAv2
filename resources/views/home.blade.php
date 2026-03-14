@@ -171,10 +171,10 @@
                             
                             $packages = [];
                             if(!empty($data['package_ids'])) {
-                                $packages = \App\Models\Package::with('destination')->whereIn('id', $data['package_ids'])->get();
+                                $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->whereIn('id', $data['package_ids'])->where('status', 'published')->get();
                             } else {
-                                // Default to latest 6 packages if none selected
-                                $packages = \App\Models\Package::with('destination')->latest()->take(6)->get();
+                                // Default to all published packages if none selected
+                                $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->where('status', 'published')->get();
                             }
                         @endphp
                         <x-sections.package-slider :packages="$packages" :data="$packagesData" />

@@ -9,7 +9,7 @@
     {{-- Hero Section --}}
     <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
-            <img src="https://placehold.co/1920x600?text={{ urlencode($category->name) }}" class="w-full h-full object-cover opacity-40">
+            <img src="{{ asset('images/heroes/hero-1_optimized.webp') }}" alt="{{ $category->name }}" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
         </div>
         
@@ -66,7 +66,7 @@
                                 {{-- Price Badge --}}
                                 <div class="absolute top-4 left-4 bg-brand-accent text-white px-4 py-2 rounded-xl flex flex-col items-center justify-center shadow-lg">
                                     <span class="text-[10px] uppercase font-bold opacity-90">Start From</span>
-                                    <span class="text-sm font-bold">IDR {{ number_format($package->price_start_from / 1000, 0) }}k</span>
+                                    <span class="text-sm font-bold">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                                 </div>
 
                                 {{-- Duration Badge --}}

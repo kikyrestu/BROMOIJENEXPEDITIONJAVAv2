@@ -10,6 +10,7 @@ RUN apk add --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
+    libwebp-dev \
     icu-dev \
     oniguruma-dev \
     mysql-client
@@ -18,7 +19,7 @@ RUN apk add --no-cache \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Configure PHP Extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
     docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     zip \

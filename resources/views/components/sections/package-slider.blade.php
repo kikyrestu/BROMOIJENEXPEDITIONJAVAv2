@@ -15,21 +15,19 @@
         $suffix = $defaultSuffix;
     }
 
-    // Get unique destinations for category tabs
-    $destinations = $packages->pluck('destination')->filter()->unique('id')->values();
     // Get unique package categories for filter tabs
     $packageCategories = $packages->pluck('categoryRelation')->filter()->unique('id')->values();
     $sliderId = 'pkgSection_' . uniqid();
 @endphp
 
-<section class="py-16 bg-white relative font-sans" id="{{ $sliderId }}"
+<section class="py-16 bg-white relative font-sans" id="packages" data-slider-id="{{ $sliderId }}"
     x-data="{
         activeCategory: 'all',
 
         filterCategory(dest) {
             this.activeCategory = dest;
             this.$nextTick(() => {
-                const section = document.getElementById('{{ $sliderId }}');
+                const section = this.$el.closest('section');
                 if (section && section._swiperInstance) {
                     section._swiperInstance.slideTo(0, 300);
                     section._swiperInstance.update();
@@ -88,20 +86,12 @@
                 class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
                 All
             </button>
-            @foreach($packageCategories as $pkgCat)
+            @foreach($packageCategories as $filter)
                 <button type="button"
-                    @click="filterCategory('{{ $pkgCat->name }}')"
-                    :class="activeCategory === '{{ $pkgCat->name }}' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                    @click="filterCategory('{{ $filter->name }}')"
+                    :class="activeCategory === '{{ $filter->name }}' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
                     class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
-                    {{ $pkgCat->name }}
-                </button>
-            @endforeach
-            @foreach($destinations as $dest)
-                <button type="button"
-                    @click="filterCategory('{{ $dest->name }}')"
-                    :class="activeCategory === '{{ $dest->name }}' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                    class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
-                    {{ $dest->name }}
+                    {{ $filter->name }}
                 </button>
             @endforeach
         </div>
@@ -153,7 +143,7 @@
 
                                 {{-- Price Tag --}}
                                 <div class="absolute bottom-2 left-2 bg-brand-accent text-white font-bold px-3 py-1 rounded text-xs shadow-md">
-                                    IDR {{ number_format($package->price_start_from/1000, 0) }}k
+                                    IDR {{ number_format($package->price_start_from, 0, ',', '.') }}
                                 </div>
                             </div>
 
@@ -242,7 +232,7 @@
         var swiperEl = document.getElementById(sid + '_swiper');
         var prevBtn = document.getElementById(sid + '_prev');
         var nextBtn = document.getElementById(sid + '_next');
-        var section = document.getElementById(sid);
+        var section = swiperEl ? swiperEl.closest('section') : null;
 
         if (!swiperEl || !prevBtn || !nextBtn) return false;
         if (typeof window.Swiper === 'undefined' || !window.SwiperModules) return false;

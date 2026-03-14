@@ -32,7 +32,17 @@ Route::get('/packages/category/{category:slug}', function (\App\Models\Category 
 })->name('packages.category');
 
 Route::get('/packages/{package:slug}', function (\App\Models\Package $package) {
-    return view('packages.show', compact('package'));
+    $relatedPackages = \App\Models\Package::with(['destination', 'categoryRelation'])
+        ->where('status', 'published')
+        ->where('id', '!=', $package->id)
+        ->where(function ($q) use ($package) {
+            $q->where('category_id', $package->category_id)
+              ->orWhere('destination_id', $package->destination_id);
+        })
+        ->inRandomOrder()
+        ->take(4)
+        ->get();
+    return view('packages.show', compact('package', 'relatedPackages'));
 })->name('packages.show');
 
 // Blog Routes
@@ -121,6 +131,7 @@ Route::get('/sitemap.xml', function () {
     $urls->push(['loc' => $baseUrl . '/packages', 'priority' => '0.9', 'changefreq' => 'weekly']);
     $urls->push(['loc' => $baseUrl . '/blogs', 'priority' => '0.8', 'changefreq' => 'weekly']);
     $urls->push(['loc' => $baseUrl . '/gallery', 'priority' => '0.7', 'changefreq' => 'monthly']);
+    $urls->push(['loc' => $baseUrl . '/reviews', 'priority' => '0.8', 'changefreq' => 'weekly']);
     
     // Packages
     \App\Models\Package::where('status', 'published')->get()->each(function ($pkg) use ($urls, $baseUrl) {
@@ -195,3 +206,20 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 Route::get('/review/{token}', [\App\Http\Controllers\ClientReviewController::class, 'create'])->name('client.review.create');
 Route::post('/review/{token}', [\App\Http\Controllers\ClientReviewController::class, 'store'])->name('client.review.store');
 Route::get('/guest-review/success', [\App\Http\Controllers\ClientReviewController::class, 'success'])->name('client.review.success');
+
+// Public Reviews Page
+Route::get('/reviews', function () {
+    $reviews = \App\Models\Testimonial::whereIn('status', ['approved', 'published'])
+        ->orderByDesc('created_at')
+        ->paginate(12);
+
+    $stats = [
+        'total' => \App\Models\Testimonial::whereIn('status', ['approved', 'published'])->count(),
+        'average' => round(\App\Models\Testimonial::whereIn('status', ['approved', 'published'])->avg('rating'), 1),
+        'distribution' => collect(range(5, 1))->mapWithKeys(function ($star) {
+            return [$star => \App\Models\Testimonial::whereIn('status', ['approved', 'published'])->where('rating', $star)->count()];
+        }),
+    ];
+
+    return view('reviews.index', compact('reviews', 'stats'));
+})->name('reviews.index');

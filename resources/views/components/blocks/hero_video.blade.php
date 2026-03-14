@@ -240,6 +240,7 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
                 <!-- Image (Always Rendered, Toggled via x-show) -->
                 <img x-show="slide.type !== 'video'" 
                      :src="slide.type !== 'video' ? slide.url : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'" 
+                     :alt="slide.alt || 'Bromo Ijen Expedition - East Java Tour'"
                      class="w-full h-full object-cover">
                      
                 <div class="absolute inset-0 bg-black/30"></div>

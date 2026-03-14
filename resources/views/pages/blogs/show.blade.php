@@ -106,32 +106,8 @@
                 {{-- Sidebar / Related --}}
                 <div class="lg:col-span-4">
                     <div class="sticky top-32">
-                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 mb-8">
-                            <h3 class="text-xl font-bold text-brand-dark mb-6">More Stories</h3>
-                            
-                            <div class="flex flex-col gap-6">
-                                @forelse($relatedPosts as $related)
-                                    <a href="{{ route('blogs.show', $related->slug) }}" class="group flex gap-4 items-center">
-                                        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0">
-                                            <img src="{{ $related->thumbnail_path ? asset('storage/' . $related->thumbnail_path) : 'https://placehold.co/150x150' }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
-                                        </div>
-                                        <div>
-                                            <span class="text-[10px] font-bold text-brand-primary uppercase tracking-wider mb-1 block">
-                                                {{ $related->category->name ?? 'News' }}
-                                            </span>
-                                            <h4 class="font-bold text-slate-700 leading-snug group-hover:text-brand-dark transition-colors line-clamp-2">
-                                                {{ $related->title }}
-                                            </h4>
-                                        </div>
-                                    </a>
-                                @empty
-                                    <p class="text-slate-400 text-sm">No related stories found.</p>
-                                @endforelse
-                            </div>
-                        </div>
-
                         {{-- CTA --}}
-                        <div class="relative rounded-3xl overflow-hidden aspect-[4/5] group">
+                        <div class="relative rounded-3xl overflow-hidden aspect-[4/5] group mb-8">
                             <img src="https://placehold.co/600x800?text=Bromo+Tour" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
                             <div class="absolute inset-x-0 bottom-0 p-8 text-center">
@@ -142,6 +118,90 @@
                                 </a>
                             </div>
                         </div>
+
+                        {{-- Related Articles --}}
+                        @php
+                            $moreBlogs = \App\Models\Blog::with(['author', 'category'])
+                                ->whereNotNull('published_at')
+                                ->where('id', '!=', $blog->id)
+                                ->inRandomOrder()
+                                ->take(3)
+                                ->get();
+                        @endphp
+                        @if($moreBlogs->count())
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 mt-8">
+                            <h3 class="text-xl font-bold text-brand-dark mb-6">Related Articles</h3>
+                            <div class="flex flex-col gap-5">
+                                @foreach($moreBlogs as $moreBlog)
+                                    <a href="{{ route('blogs.show', $moreBlog->slug) }}" class="group flex gap-4 items-start">
+                                        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0">
+                                            <img src="{{ $moreBlog->thumbnail_path ? asset('storage/' . $moreBlog->thumbnail_path) : 'https://placehold.co/150x150?text=' . urlencode(Str::limit($moreBlog->title, 10)) }}"
+                                                 alt="{{ $moreBlog->title }}" loading="lazy"
+                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <span class="text-[10px] font-bold text-brand-primary uppercase tracking-wider mb-1 block">
+                                                {{ $moreBlog->category->name ?? 'News' }}
+                                            </span>
+                                            <h4 class="font-bold text-slate-700 leading-snug group-hover:text-brand-primary transition-colors line-clamp-2 text-sm">
+                                                {{ $moreBlog->title }}
+                                            </h4>
+                                            <span class="text-xs text-slate-400 mt-1 block">{{ $moreBlog->published_at?->format('d M, Y') }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                            <a href="{{ route('blogs.index') }}" class="mt-5 inline-flex items-center gap-1 text-sm font-bold text-brand-primary hover:text-brand-dark transition-colors">
+                                View All Articles
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </div>
+                        @endif
+
+                        {{-- Recommended Packages --}}
+                        @php
+                            $recPackages = \App\Models\Package::with(['destination'])
+                                ->where('status', 'published')
+                                ->inRandomOrder()
+                                ->take(3)
+                                ->get();
+                        @endphp
+                        @if($recPackages->count())
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 mt-8">
+                            <h3 class="text-xl font-bold text-brand-dark mb-6">Popular Packages</h3>
+                            <div class="flex flex-col gap-4">
+                                @foreach($recPackages as $recPkg)
+                                <a href="{{ route('packages.show', $recPkg->slug) }}" class="group flex gap-3 items-start bg-white rounded-xl border border-slate-100 p-3 hover:shadow-md transition-all">
+                                    <div class="w-20 h-16 rounded-lg overflow-hidden shrink-0">
+                                        @php
+                                            $recThumb = $recPkg->thumbnail;
+                                            if(!empty($recThumb) && !str_starts_with($recThumb, 'http')) {
+                                                $recThumb = \Illuminate\Support\Facades\Storage::url($recThumb);
+                                            } elseif(empty($recThumb)) {
+                                                $recThumb = 'https://placehold.co/150x120?text=Tour';
+                                            }
+                                        @endphp
+                                        <img src="{{ $recThumb }}" alt="{{ $recPkg->name }}" loading="lazy"
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-700 leading-snug group-hover:text-brand-primary transition-colors line-clamp-2">
+                                            {{ $recPkg->name }}
+                                        </h4>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-xs text-brand-primary font-bold">IDR {{ number_format($recPkg->price_start_from, 0, ',', '.') }}</span>
+                                            <span class="text-[11px] text-slate-400">· {{ $recPkg->duration_days }} Days</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                @endforeach
+                            </div>
+                            <a href="{{ route('packages.index') }}" class="mt-5 inline-flex items-center gap-1 text-sm font-bold text-brand-primary hover:text-brand-dark transition-colors">
+                                View All Packages
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </div>
+                        @endif
                     
                     </div>
                 </div>

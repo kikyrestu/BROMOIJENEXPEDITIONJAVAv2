@@ -20,7 +20,7 @@ class HomeController extends Controller
         $destinations = \App\Models\Destination::where('is_featured', true)->take(3)->get();
         
         // 3. Fetch Packages
-        $packages = \App\Models\Package::with('destination')->take(6)->get();
+        $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->where('status', 'published')->get();
 
         // 4. Fetch Latest Blogs
         $latest_posts = \App\Models\Blog::where('status', 'published')->latest()->take(3)->get();

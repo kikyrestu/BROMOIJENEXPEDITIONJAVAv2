@@ -42,7 +42,7 @@
     $founderRole = $data['founder_role'] ?? 'Founder, BromoIjen';
 @endphp
 
-<section class="py-12 md:py-16 bg-[#f9f9f9] relative font-sans overflow-hidden">
+<section id="aboutus" class="py-12 md:py-16 bg-[#f9f9f9] relative font-sans overflow-hidden">
     
     {{-- Decorative Background --}}
     <div class="absolute top-20 left-10 opacity-10 pointer-events-none">
@@ -59,7 +59,7 @@
                 
                 {{-- Main Image --}}
                 <div class="relative z-10 w-[65%] ml-auto lg:ml-8 aspect-[4/5] rounded-tl-[60px] rounded-br-[30px] overflow-hidden shadow-xl border-4 border-white">
-                    <img data-live="image_url" src="{{ $mainImage }}" class="w-full h-full object-cover">
+                    <img data-live="image_url" src="{{ $mainImage }}" alt="About Bromo Ijen Expedition" class="w-full h-full object-cover">
                     
                     {{-- Play Button Overlay --}}
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -73,7 +73,7 @@
 
                 {{-- Secondary Image --}}
                 <div class="absolute -bottom-6 -right-2 md:right-8 lg:right-16 w-[45%] aspect-square bg-white p-2 rounded-tl-[30px] rounded-br-[30px] shadow-lg z-20 hidden md:block border border-slate-100">
-                     <img data-live="secondary_image_url" src="{{ $secondaryImage }}" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
+                     <img data-live="secondary_image_url" src="{{ $secondaryImage }}" alt="East Java Adventure Tours" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
                 </div>
 
                 {{-- Decorative Green Bar --}}

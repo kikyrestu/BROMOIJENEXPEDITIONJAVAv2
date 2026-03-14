@@ -24,6 +24,7 @@ class OptimizeImageJob implements ShouldQueue
         protected string $filePath,
         protected string $disk = 'public',
         protected string $mode = 'standard',
+        protected string $fieldName = 'thumbnail',
     ) {}
 
     public function handle(): void
@@ -39,8 +40,8 @@ class OptimizeImageJob implements ShouldQueue
             $newPath = $optimizer->optimizeInPlace($this->filePath, $this->disk);
             if ($newPath) {
                 $model = $this->modelClass::find($this->modelId);
-                if ($model && $model->thumbnail === $this->filePath) {
-                    $model->withoutEvents(fn () => $model->update(['thumbnail' => $newPath]));
+                if ($model && $model->{$this->fieldName} === $this->filePath) {
+                    $model->withoutEvents(fn () => $model->update([$this->fieldName => $newPath]));
                 }
             }
             return;

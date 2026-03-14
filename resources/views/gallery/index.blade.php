@@ -3,7 +3,7 @@
     @php $heroImg = \App\Models\Setting::where('key', 'hero_image_gallery')->value('value'); @endphp
     <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
-            <img src="{{ $heroImg ? Storage::disk('public')->url($heroImg) : 'https://placehold.co/1920x600?text=Gallery+Header' }}" class="w-full h-full object-cover opacity-40">
+            <img src="{{ $heroImg ? Storage::disk('public')->url($heroImg) : asset('images/heroes/hero-1_optimized.webp') }}" alt="Bromo Ijen Expedition Gallery" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
         </div>
         
