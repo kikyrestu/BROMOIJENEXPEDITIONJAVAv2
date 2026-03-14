@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-    /* Custom colors from config */
-    --color-brand-primary: #0f172a;
-    --color-brand-accent: #38bdf8;
+    /* Brand Colors (matching existing design) */
+    --color-brand-primary: #63ab45;
+    --color-brand-accent: #f7921e;
+    --color-brand-dark: #1d231f;
 
-    /* Custom font */
-    --font-sans: 'Inter', sans-serif;
+    /* Fonts */
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-hand: 'Just Another Hand', cursive;
 }
 
-/* Custom utilities */
+/* Hide Alpine elements until initialized */
+[x-cloak] { display: none !important; }
+
+/* Custom container */
 .container-custom {
     max-width: 80rem;
-    /* max-w-7xl */
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem;

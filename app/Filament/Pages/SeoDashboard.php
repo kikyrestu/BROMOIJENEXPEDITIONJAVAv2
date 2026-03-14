@@ -74,24 +74,27 @@ class SeoDashboard extends Page
     public function regenerateSitemap()
     {
         $urls = [];
+        $baseUrl = rtrim(config('app.url'), '/'); // Always use APP_URL from .env
         
         // Harvest URLs
-        // Pages
-        $pages = \App\Models\Page::where('status', 'published')->get();
+        // Pages (no status column, get all)
+        $pages = \App\Models\Page::all();
         foreach($pages as $page) {
-            $urls[] = url($page->slug);
+            // Handle homepage specially
+            $slug = $page->slug === 'home' ? '' : $page->slug;
+            $urls[] = $baseUrl . '/' . $slug;
         }
         
-        // Packages
-        $packages = \App\Models\Package::all(); // Add status check if exists
+        // Packages (PLURAL route!)
+        $packages = \App\Models\Package::all();
         foreach($packages as $pkg) {
-            $urls[] = url('/package/' . $pkg->slug);
+            $urls[] = $baseUrl . '/packages/' . $pkg->slug;
         }
 
         // Blogs
         $blogs = \App\Models\Blog::where('status', 'published')->get();
         foreach($blogs as $blog) {
-            $urls[] = url('/blog/' . $blog->slug);
+            $urls[] = $baseUrl . '/blogs/' . $blog->slug;
         }
 
         // Generate XML

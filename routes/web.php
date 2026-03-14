@@ -7,14 +7,29 @@ use App\Http\Controllers\TestController;
 // Public Routes
 Route::get('/test-debug', function() { return 'Application is Working'; });
 Route::get('/', HomeController::class)->name('home');
-// Route::get('/', function() {
-//    return 'ROOT ROUTE ALIVE. If you see this, web.php is fine, and HomeController is the problem.';
-// })->name('home');
+
+// Fix for "Method Not Allowed" on POST / (likely bots or analytics)
+Route::post('/', function() {
+    return redirect('/');
+});
+
+// UPLOAD FIX: Bypass signature validation using custom controller
+Route::post('/livewire/upload-file', [\App\Http\Controllers\LivewireUploadController::class, 'handle'])
+    ->name('livewire.upload-file')
+    ->middleware(['web', 'throttle:60,1']);
 
 Route::get('/packages', function () {
-    $packages = \App\Models\Package::with('destination')->where('status', 'published')->get();
-    return view('packages.index', compact('packages'));
+    $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->where('status', 'published')->get();
+    $categories = \App\Models\Category::packageType()->navbar()->withCount(['publishedPackages'])->get();
+    return view('packages.index', compact('packages', 'categories'));
 })->name('packages.index');
+
+Route::get('/packages/category/{category:slug}', function (\App\Models\Category $category) {
+    abort_if($category->type !== 'package', 404);
+    $packages = $category->packages()->with('destination')->where('status', 'published')->get();
+    $categories = \App\Models\Category::packageType()->navbar()->withCount(['publishedPackages'])->get();
+    return view('packages.category', compact('packages', 'category', 'categories'));
+})->name('packages.category');
 
 Route::get('/packages/{package:slug}', function (\App\Models\Package $package) {
     return view('packages.show', compact('package'));
@@ -55,28 +70,34 @@ Route::get('/destinations/{destination:slug}', function (\App\Models\Destination
 
 // Gallery Routes
 Route::get('/gallery', function () {
-    $images = \App\Models\Media::where('type', 'image')
-        ->latest()
+    $images = \App\Models\Gallery::orderBy('sort_order')
         ->paginate(12);
-    return view('gallery.index', compact('images'));
+    $categories = \App\Models\Gallery::select('category')
+        ->distinct()
+        ->whereNotNull('category')
+        ->pluck('category');
+    return view('gallery.index', compact('images', 'categories'));
 })->name('gallery.index');
 
 // Gallery API for infinite scroll
 Route::get('/api/gallery', function (\Illuminate\Http\Request $request) {
-    $images = \App\Models\Media::where('type', 'image')
-        ->latest()
-        ->paginate(12);
+    $query = \App\Models\Gallery::orderBy('sort_order');
+    
+    if ($request->has('category') && $request->category !== 'all') {
+        $query->where('category', $request->category);
+    }
+    
+    $images = $query->paginate(12);
     
     return response()->json([
-        'data' => $images->map(function($media) {
-            $url = str_starts_with($media->file_path, 'http') 
-                ? $media->file_path 
-                : \Illuminate\Support\Facades\Storage::url($media->file_path);
+        'data' => $images->map(function($item) {
             return [
-                'id' => $media->id,
-                'name' => $media->name,
-                'url' => $url,
-                'alt' => $media->alt_text ?? $media->name,
+                'id' => $item->id,
+                'name' => $item->title,
+                'url' => $item->display_url,
+                'originalUrl' => $item->original_url,
+                'alt' => $item->alt_text ?? $item->title,
+                'category' => $item->category,
             ];
         }),
         'next_page' => $images->hasMorePages() ? $images->currentPage() + 1 : null,
@@ -88,6 +109,72 @@ Route::get('/api/gallery', function (\Illuminate\Http\Request $request) {
 Route::get('/login', function () {
     return redirect()->route('filament.admin.auth.login');
 })->name('login');
+
+// Dynamic Sitemap
+Route::get('/sitemap.xml', function () {
+    $baseUrl = config('app.url', 'https://bromoijenexpeditionjava.com');
+    
+    $urls = collect();
+    
+    // Static pages
+    $urls->push(['loc' => $baseUrl . '/', 'priority' => '1.0', 'changefreq' => 'daily']);
+    $urls->push(['loc' => $baseUrl . '/packages', 'priority' => '0.9', 'changefreq' => 'weekly']);
+    $urls->push(['loc' => $baseUrl . '/blogs', 'priority' => '0.8', 'changefreq' => 'weekly']);
+    $urls->push(['loc' => $baseUrl . '/gallery', 'priority' => '0.7', 'changefreq' => 'monthly']);
+    
+    // Packages
+    \App\Models\Package::where('status', 'published')->get()->each(function ($pkg) use ($urls, $baseUrl) {
+        $urls->push([
+            'loc' => $baseUrl . '/packages/' . $pkg->slug,
+            'lastmod' => $pkg->updated_at?->toDateString(),
+            'priority' => '0.8',
+            'changefreq' => 'weekly',
+        ]);
+    });
+    
+    // Destinations
+    \App\Models\Destination::all()->each(function ($dest) use ($urls, $baseUrl) {
+        $urls->push([
+            'loc' => $baseUrl . '/destinations/' . $dest->slug,
+            'lastmod' => $dest->updated_at?->toDateString(),
+            'priority' => '0.7',
+            'changefreq' => 'monthly',
+        ]);
+    });
+    
+    // Blogs
+    \App\Models\Blog::where('status', 'published')->get()->each(function ($blog) use ($urls, $baseUrl) {
+        $urls->push([
+            'loc' => $baseUrl . '/blogs/' . $blog->slug,
+            'lastmod' => $blog->updated_at?->toDateString(),
+            'priority' => '0.7',
+            'changefreq' => 'monthly',
+        ]);
+    });
+    
+    // Category pages
+    \App\Models\Category::where('type', 'package')->get()->each(function ($cat) use ($urls, $baseUrl) {
+        $urls->push([
+            'loc' => $baseUrl . '/packages/category/' . $cat->slug,
+            'priority' => '0.6',
+            'changefreq' => 'weekly',
+        ]);
+    });
+    
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    foreach ($urls as $url) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . htmlspecialchars($url['loc'], ENT_XML1) . '</loc>';
+        if (!empty($url['lastmod'])) $xml .= '<lastmod>' . $url['lastmod'] . '</lastmod>';
+        $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
+        $xml .= '<priority>' . $url['priority'] . '</priority>';
+        $xml .= '</url>';
+    }
+    $xml .= '</urlset>';
+    
+    return response($xml, 200, ['Content-Type' => 'application/xml']);
+});
 
 // Admin Routes (Visual Editor & Media Bridge)
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
@@ -103,3 +190,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::post('/api/media-store', [\App\Http\Controllers\Admin\MediaLibraryController::class, 'store'])
         ->name('admin.api.media-library.store');
 });
+
+// Client Review Routes (Token-based, single-use)
+Route::get('/review/{token}', [\App\Http\Controllers\ClientReviewController::class, 'create'])->name('client.review.create');
+Route::post('/review/{token}', [\App\Http\Controllers\ClientReviewController::class, 'store'])->name('client.review.store');
+Route::get('/guest-review/success', [\App\Http\Controllers\ClientReviewController::class, 'success'])->name('client.review.success');

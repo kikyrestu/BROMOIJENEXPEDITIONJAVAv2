@@ -11,6 +11,8 @@ class Media extends Model
     protected $fillable = [
         'name',
         'file_path',
+        'optimized_path',
+        'thumbnail_path',
         'type',
         'mime_type',
         'size',

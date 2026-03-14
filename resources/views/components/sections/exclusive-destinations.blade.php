@@ -39,14 +39,14 @@
     </div>
 
     @if($destinations->count() >= 1)
-        {{-- Flex Layout for Centered Cards --}}
-        <div class="flex flex-wrap justify-center gap-8 max-w-[1400px] mx-auto px-4">
+        {{-- Grid Layout: always 1 row on desktop --}}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-[1400px] mx-auto px-4">
             
             @foreach($destinations as $destination)
                 <a href="{{ route('destinations.show', $destination) }}" class="group relative block transition-transform hover:-translate-y-2 duration-500">
                     
                     {{-- Destination Card --}}
-                    <div class="group relative block w-full max-w-[320px] aspect-[3/5] mx-auto overflow-hidden bg-white shadow-lg 
+                    <div class="group relative block w-full aspect-[3/5] mx-auto overflow-hidden bg-white shadow-lg 
                                 rounded-tl-[120px] rounded-bl-[50px] rounded-br-[50px] rounded-tr-none 
                                 hover:rounded-tr-[50px] transition-all duration-500 ease-in-out">
                         

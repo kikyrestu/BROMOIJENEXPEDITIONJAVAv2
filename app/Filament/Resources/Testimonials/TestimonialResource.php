@@ -24,7 +24,7 @@ class TestimonialResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $recordTitleAttribute = 'namename';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function canViewAny(): bool
     {

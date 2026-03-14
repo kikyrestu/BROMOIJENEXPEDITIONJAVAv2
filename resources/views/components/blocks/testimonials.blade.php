@@ -1,18 +1,16 @@
 @props(['data'])
 
 @php
-    $dbTestimonials = \App\Models\Testimonial::where('status', 'published')->latest()->take(10)->get();
+    $dbTestimonials = \App\Models\Testimonial::publiclyVisible()->latest()->take(10)->get();
 
     if ($dbTestimonials->isNotEmpty()) {
         $testimonials = $dbTestimonials->map(function($t) {
             return [
                 'name' => $t->name,
-                'role' => $t->role,
+                'role' => $t->display_role,
                 'content' => $t->content,
                 'rating' => $t->rating ?? 5,
-                'avatar' => $t->photo_path 
-                    ? \Illuminate\Support\Facades\Storage::url($t->photo_path) 
-                    : 'https://ui-avatars.com/api/?name='.urlencode($t->name).'&background=random'
+                'avatar' => $t->display_photo_url,
             ];
         });
     } else {

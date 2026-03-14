@@ -231,7 +231,7 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
                 <video x-show="slide.type === 'video'"
                        :id="'hero-video-' + blockIndex + '-' + index"
                        class="w-full h-full object-cover" 
-                       autoplay muted playsinline 
+                       autoplay muted playsinline preload="metadata"
                        :loop="slides.length === 1" 
                        @ended="nextSlideLogic()">
                     <source :src="slide.url" :type="slide.mime_type">

@@ -11,6 +11,7 @@ class Package extends Model
 {
     protected $fillable = [
         'destination_id',
+        'category_id',
         'name',
         'slug',
         'thumbnail',
@@ -55,6 +56,11 @@ class Package extends Model
     public function destination(): BelongsTo
     {
         return $this->belongsTo(Destination::class);
+    }
+
+    public function categoryRelation(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function seo(): MorphOne

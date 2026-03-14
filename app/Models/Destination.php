@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Destination extends Model
 {
@@ -16,6 +17,7 @@ class Destination extends Model
         'thumbnail_path',
         'thumbnail_media_id',
         'is_featured',
+        'sort_order',
     ];
 
     protected $casts = [
@@ -30,5 +32,10 @@ class Destination extends Model
     public function hotspots(): HasMany
     {
         return $this->hasMany(Hotspot::class);
+    }
+
+    public function seo(): MorphOne
+    {
+        return $this->morphOne(SeoMetadata::class, 'seoable');
     }
 }

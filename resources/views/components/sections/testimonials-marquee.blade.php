@@ -24,6 +24,20 @@
         }
         $testimonials = $normalized;
     }
+
+    $toAvatarUrl = function ($testimonial) {
+        $avatar = $testimonial->avatar ?? null;
+
+        if (!empty($avatar) && (str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://'))) {
+            return $avatar;
+        }
+
+        if (!empty($avatar)) {
+            return \Illuminate\Support\Facades\Storage::url($avatar);
+        }
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($testimonial->name).'&background=random';
+    };
 @endphp
 
 <section class="py-16 md:py-24 bg-[#f9f9f9] relative font-sans overflow-hidden">
@@ -82,9 +96,9 @@
                         </div>
 
                         {{-- Stars --}}
-                        <div class="flex text-yellow-400 mb-6 relative z-10">
-                            @for($s=0; $s<5; $s++)
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                        <div class="flex mb-6 relative z-10">
+                            @for($s=1; $s<=5; $s++)
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 {{ $s <= ((int) ($testimonial->rating ?? 5)) ? 'text-yellow-400' : 'text-slate-200' }}">
                                     <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
                                 </svg>
                             @endfor
@@ -96,7 +110,7 @@
                         </p>
                         
                         <div class="flex items-center gap-4 mt-auto relative z-10 border-t border-slate-50 pt-6">
-                            <img src="{{ !empty($testimonial->avatar) ? $testimonial->avatar : 'https://ui-avatars.com/api/?name='.urlencode($testimonial->name).'&background=random' }}" alt="{{ $testimonial->name }}" class="w-12 h-12 rounded-full border border-slate-100">
+                            <img src="{{ $toAvatarUrl($testimonial) }}" alt="{{ $testimonial->name }}" class="w-12 h-12 rounded-full border border-slate-100">
                             <div>
                                 <h4 class="text-brand-dark font-bold text-base">{{ $testimonial->name }}</h4>
                                 <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">{{ $testimonial->role }}</p>

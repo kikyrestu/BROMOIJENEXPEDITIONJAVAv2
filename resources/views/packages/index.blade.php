@@ -7,9 +7,10 @@
 
 <x-app-layout :seo="$seo">
     {{-- Hero Section --}}
+    @php $heroImg = \App\Models\Setting::where('key', 'hero_image_packages')->value('value'); @endphp
     <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
-            <img src="https://placehold.co/1920x600?text=Packages+Header" class="w-full h-full object-cover opacity-40">
+            <img src="{{ $heroImg ? Storage::disk('public')->url($heroImg) : 'https://placehold.co/1920x600?text=Packages+Header' }}" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
         </div>
         
@@ -25,6 +26,29 @@
             </p>
         </div>
     </div>
+
+    {{-- Category Tabs --}}
+    @if(isset($categories) && $categories->count() > 0)
+    <section class="bg-slate-50 border-b border-slate-200">
+        <div class="container mx-auto px-6 md:px-12 lg:px-20">
+            <div class="flex flex-wrap items-center gap-2 py-4 overflow-x-auto">
+                <a href="{{ route('packages.index') }}" 
+                   class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-brand-primary text-white shadow-lg shadow-brand-primary/30 whitespace-nowrap">
+                    All Packages
+                </a>
+                @foreach($categories as $cat)
+                    <a href="{{ route('packages.category', $cat->slug) }}" 
+                       class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">
+                        {{ $cat->name }}
+                        @if($cat->published_packages_count > 0)
+                            <span class="ml-1 text-xs opacity-75">({{ $cat->published_packages_count }})</span>
+                        @endif
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Package Grid Section --}}
     <section class="py-16 md:py-24 bg-white relative">

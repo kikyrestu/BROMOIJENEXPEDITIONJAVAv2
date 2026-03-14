@@ -98,21 +98,20 @@ class BlogResource extends Resource
                                                             ->imageResizeMode('cover')
                                                             ->imageCropAspectRatio('2:1'),
                                                         
-                                                        \Filament\Forms\Components\Select::make('category')
-                                                            ->options([
-                                                                'Travel Guide' => 'Travel Guide',
-                                                                'Adventure' => 'Adventure',
-                                                                'Photography' => 'Photography',
-                                                                'Tips' => 'Tips',
-                                                                'News' => 'News',
-                                                                'Culture' => 'Culture',
-                                                                'Destinations' => 'Destinations',
-                                                                'Budget Travel' => 'Budget Travel',
-                                                                'Solo Travel' => 'Solo Travel',
-                                                            ])
+                                                        \Filament\Forms\Components\Select::make('category_id')
+                                                            ->label('Category')
+                                                            ->relationship('category', 'name', fn ($query) => $query->where('type', 'blog'))
                                                             ->searchable()
+                                                            ->preload()
                                                             ->required()
-                                                            ->createOptionForm(fn($schema) => []), // Disable create
+                                                            ->createOptionForm([
+                                                                \Filament\Forms\Components\TextInput::make('name')
+                                                                    ->required()
+                                                                    ->live(onBlur: true)
+                                                                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                                                                \Filament\Forms\Components\TextInput::make('slug')->required(),
+                                                                \Filament\Forms\Components\Hidden::make('type')->default('blog'),
+                                                            ]),
                                                         
                                                         \Filament\Forms\Components\TagsInput::make('tags')
                                                             ->placeholder('Add tags...'),
@@ -149,7 +148,7 @@ class BlogResource extends Resource
             ->columns([
                 \Filament\Tables\Columns\ImageColumn::make('thumbnail_path')->disk('public')->label('Image'),
                 \Filament\Tables\Columns\TextColumn::make('title')->searchable()->sortable()->limit(30),
-                \Filament\Tables\Columns\TextColumn::make('category')->badge()->color('info'),
+                \Filament\Tables\Columns\TextColumn::make('category.name')->label('Category')->badge()->color('info'),
                 \Filament\Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->colors([
@@ -166,18 +165,9 @@ class BlogResource extends Resource
                         'draft' => 'Draft',
                         'published' => 'Published',
                     ]),
-                \Filament\Tables\Filters\SelectFilter::make('category')
-                    ->options([
-                        'Travel Guide' => 'Travel Guide',
-                        'Adventure' => 'Adventure',
-                        'Photography' => 'Photography',
-                        'Tips' => 'Tips',
-                        'News' => 'News',
-                        'Culture' => 'Culture',
-                        'Destinations' => 'Destinations',
-                        'Budget Travel' => 'Budget Travel',
-                        'Solo Travel' => 'Solo Travel',
-                    ]),
+                \Filament\Tables\Filters\SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name', fn ($query) => $query->where('type', 'blog')),
             ])
             ->actions([
                 \Filament\Actions\EditAction::make(),

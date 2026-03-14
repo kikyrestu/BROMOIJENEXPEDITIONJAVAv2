@@ -48,7 +48,6 @@ class MediaResource extends Resource
                     ->preserveFilenames()
                     ->maxSize(102400) // 100MB
                     ->acceptedFileTypes(['image/*', 'video/*', 'application/pdf'])
-                    ->live() // Upload automatically
                     ->imagePreviewHeight('250')
                     ->loadingIndicatorPosition('left')
                     ->panelLayout('integrated')

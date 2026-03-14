@@ -27,6 +27,10 @@ class NavigationMenusTable
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
+                TextColumn::make('auto_load')
+                    ->label('Auto-Load')
+                    ->badge()
+                    ->color(fn (string $state): string => $state === 'none' ? 'gray' : 'success'),
                 TextColumn::make('target')
                     ->badge(),
             ])

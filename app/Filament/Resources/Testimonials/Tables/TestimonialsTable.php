@@ -21,7 +21,7 @@ class TestimonialsTable
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->description(fn ($record) => $record->role),
+                    ->description(fn ($record) => $record->country ?: $record->role),
                 TextColumn::make('rating')
                     ->numeric()
                     ->sortable()
@@ -32,6 +32,7 @@ class TestimonialsTable
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'approved',
+                        'success' => 'published',
                         'danger' => 'rejected',
                     ]),
                 TextColumn::make('created_at')
@@ -44,6 +45,7 @@ class TestimonialsTable
                     ->options([
                         'pending' => 'Pending',
                         'approved' => 'Approved',
+                        'published' => 'Published',
                         'rejected' => 'Rejected',
                     ]),
             ])

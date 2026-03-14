@@ -17,6 +17,9 @@ class TestimonialForm
                         \Filament\Forms\Components\TextInput::make('name')
                             ->label('Customer Name')
                             ->required(),
+                        \Filament\Forms\Components\TextInput::make('country')
+                            ->label('Country')
+                            ->placeholder('e.g. Australia, Singapore'),
                         \Filament\Forms\Components\TextInput::make('role')
                             ->label('Role / Title')
                             ->placeholder('e.g. Travel Blogger, Tourist from Germany'),
@@ -39,6 +42,7 @@ class TestimonialForm
                             ->options([
                                 'pending' => 'Pending',
                                 'approved' => 'Approved',
+                                'published' => 'Published',
                                 'rejected' => 'Rejected',
                             ])
                             ->default('pending')

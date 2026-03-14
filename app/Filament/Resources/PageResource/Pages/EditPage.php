@@ -39,7 +39,7 @@ class EditPage extends EditRecord
         $destinations = \App\Models\Destination::where('is_featured', true)->take(3)->get();
         $packages = \App\Models\Package::with('destination')->take(6)->get();
         $latest_posts = \App\Models\Blog::where('status', 'published')->latest()->take(3)->get();
-        $testimonials = \App\Models\Testimonial::where('status', 'published')->latest()->take(6)->get();
+        $testimonials = \App\Models\Testimonial::publiclyVisible()->latest()->take(6)->get();
 
         // MERGE LIVE FORM DATA into the Page object
         // This ensures the preview shows UNSAVED changes (Live Edit)

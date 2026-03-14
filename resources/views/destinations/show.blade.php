@@ -1,4 +1,12 @@
-<x-app-layout>
+@php
+    $destSeo = $destination->seo ?? new \App\Models\SeoMetadata([
+        'meta_title' => $destination->name . ' Tour Packages',
+        'meta_description' => \Illuminate\Support\Str::limit(strip_tags($destination->description ?? ''), 160) ?: 'Explore ' . $destination->name . ' with our professional guided tours.',
+    ]);
+    if (!$destSeo->meta_title) $destSeo->meta_title = $destination->name . ' Tour Packages';
+    if (!$destSeo->meta_description) $destSeo->meta_description = 'Explore ' . $destination->name . ' with our professional guided tours.';
+@endphp
+<x-app-layout :seo="$destSeo">
     {{-- Hero Section --}}
     <section class="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         {{-- Background Image --}}

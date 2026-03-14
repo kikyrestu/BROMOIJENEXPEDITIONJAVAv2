@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Pages;
+namespace App\Filament\Resources\CategoryResource\Pages;
 
-use App\Filament\Resources\Categories\CategoryResource;
-use Filament\Actions\CreateAction;
+use App\Filament\Resources\CategoryResource;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Actions;
 
 class ListCategories extends ListRecords
 {
@@ -13,7 +13,7 @@ class ListCategories extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

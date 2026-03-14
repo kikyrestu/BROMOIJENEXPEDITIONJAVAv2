@@ -16,7 +16,6 @@ class Blog extends Model
         'author_id',
         'author_name',
         'category_id',
-        'category',
         'title',
         'excerpt',
         'slug',

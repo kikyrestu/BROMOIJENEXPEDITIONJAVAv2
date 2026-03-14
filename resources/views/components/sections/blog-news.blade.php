@@ -23,7 +23,7 @@
 
     // Normalize posts to array structure if specific keys are missing or if it's a collection
     $normalizedPosts = [];
-    $rawPosts = $posts instanceof \Illuminate\Support\Eloquent\Collection ? $posts : collect($posts);
+    $rawPosts = isset($posts) && $posts instanceof \Illuminate\Database\Eloquent\Collection ? $posts : collect($posts ?? []);
     
     foreach ($rawPosts as $post) {
         if ($post instanceof \App\Models\Blog) {
@@ -33,7 +33,7 @@
                 'date_day' => $post->created_at->format('d'),
                 'date_month' => $post->created_at->format('M'),
                 'author' => $post->author_name ?? 'Admin',
-                'category' => $post->category ?? 'Travel',
+                'category' => $post->category->name ?? 'Travel',
                 'excerpt' => $post->excerpt,
                 'slug' => $post->slug,
             ];

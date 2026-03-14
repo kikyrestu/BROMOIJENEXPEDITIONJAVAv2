@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Pages;
+namespace App\Filament\Resources\CategoryResource\Pages;
 
-use App\Filament\Resources\Categories\CategoryResource;
-use Filament\Actions\DeleteAction;
+use App\Filament\Resources\CategoryResource;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Actions;
 
 class EditCategory extends EditRecord
 {
@@ -13,7 +13,7 @@ class EditCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

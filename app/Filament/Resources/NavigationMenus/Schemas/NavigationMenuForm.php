@@ -43,6 +43,15 @@ class NavigationMenuForm
                     ->options(['_self' => ' self', '_blank' => ' blank'])
                     ->default('_self')
                     ->required(),
+                Select::make('auto_load')
+                    ->label('Auto-Load Children')
+                    ->options([
+                        'none' => 'None (Manual Only)',
+                        'destination_packages' => 'Destinations → Packages (WordPress style)',
+                    ])
+                    ->default('none')
+                    ->helperText('When set, this menu will auto-populate children from the selected source. Manual children will appear first.')
+                    ->reactive(),
             ]);
     }
 }

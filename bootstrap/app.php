@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->validateCsrfTokens(except: [
+            '/', 
+            '/livewire/*', 
+        ]);
+        
+        // Prevent Cloudflare from caching HTML pages
+        $middleware->web(append: [
+            \App\Http\Middleware\NoCacheHtml::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

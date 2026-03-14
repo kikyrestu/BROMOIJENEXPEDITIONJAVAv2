@@ -48,27 +48,107 @@
     @endphp
 
     {{-- SEO Metadata --}}
+    @php
+        $seoTitle = $siteName;
+        $seoDesc = $settings['default_meta_description'] ?? 'Professional tour packages for Mount Bromo, Ijen Crater & Tumpak Sewu in East Java, Indonesia.';
+        $seoKeywords = '';
+        $seoImage = !empty($defaultOg) ? \Illuminate\Support\Facades\Storage::url($defaultOg) : '';
+        $seoCanonical = url()->current();
+        $seoOgType = 'website';
+    @endphp
     @if(isset($seo))
         @if($seo instanceof \Illuminate\View\ComponentSlot)
             {{ $seo }}
         @else
-            <title>{{ $seo->meta_title }} | {{ $siteName }}</title>
-            <meta name="description" content="{{ $seo->meta_description }}">
-            <meta name="keywords" content="{{ $seo->meta_keywords }}">
-            <meta property="og:title" content="{{ $seo->meta_title }}">
-            <meta property="og:description" content="{{ $seo->meta_description }}">
-            @if(!empty($seo->og_image))
-                <meta property="og:image" content="{{ \Illuminate\Support\Facades\Storage::url($seo->og_image) }}">
-            @elseif(!empty($defaultOg))
-                <meta property="og:image" content="{{ \Illuminate\Support\Facades\Storage::url($defaultOg) }}">
-            @endif
-        @endif
-    @else
-        <title>{{ $siteName }}</title>
-        @if(!empty($defaultOg))
-            <meta property="og:image" content="{{ \Illuminate\Support\Facades\Storage::url($defaultOg) }}">
+            @php
+                $seoTitle = ($seo->meta_title ? $seo->meta_title . ' | ' : '') . $siteName;
+                $seoDesc = $seo->meta_description ?: $seoDesc;
+                $seoKeywords = $seo->meta_keywords ?? '';
+                if(!empty($seo->og_image)) $seoImage = \Illuminate\Support\Facades\Storage::url($seo->og_image);
+                if(!empty($seo->canonical_url)) $seoCanonical = $seo->canonical_url;
+                $seoOgType = $seo->og_type ?? 'website';
+            @endphp
         @endif
     @endif
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDesc }}">
+    @if($seoKeywords)<meta name="keywords" content="{{ $seoKeywords }}">@endif
+    <link rel="canonical" href="{{ $seoCanonical }}">
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="{{ $seoOgType }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDesc }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    @if($seoImage)<meta property="og:image" content="{{ $seoImage }}">@endif
+
+    {{-- Twitter Cards --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDesc }}">
+    @if($seoImage)<meta name="twitter:image" content="{{ $seoImage }}">@endif
+
+    {{-- JSON-LD Structured Data: Organization --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": "{{ $siteName }}",
+        "url": "{{ $settings['site_url'] ?? url('/') }}",
+        @if(!empty($logo))"logo": "{{ \Illuminate\Support\Facades\Storage::url($logo) }}",@endif
+        @if(!empty($settings['provider_phone']))"telephone": "+{{ $settings['provider_phone'] }}",@endif
+        @if(!empty($settings['provider_email']))"email": "{{ $settings['provider_email'] }}",@endif
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Probolinggo",
+            "addressRegion": "East Java",
+            "addressCountry": "ID"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "-7.9425",
+            "longitude": "112.9530"
+        },
+        "priceRange": "$$",
+        "description": "{{ $seoDesc }}",
+        "sameAs": [
+            @php
+                $socialLinksData = $settings['social_links'] ?? '[]';
+                $socials = is_string($socialLinksData) ? json_decode($socialLinksData, true) : (is_array($socialLinksData) ? $socialLinksData : []);
+            @endphp
+            @foreach($socials ?? [] as $social)
+                "{{ $social['url'] ?? '' }}"@if(!$loop->last),@endif
+            @endforeach
+        ]
+    }
+    </script>
+
+    {{-- JSON-LD: BreadcrumbList --}}
+    @if(!request()->routeIs('home'))
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "{{ route('home') }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "{{ $seoTitle }}",
+                "item": "{{ url()->current() }}"
+            }
+        ]
+    }
+    </script>
+    @endif
+
+    @stack('structured-data')
 
     @if(!empty($favicon))
         @php $favUrl = \Illuminate\Support\Facades\Storage::url($favicon); @endphp
@@ -93,40 +173,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Just+Another+Hand&display=swap" rel="stylesheet">
-    
-    {{-- Swiper CSS --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-    {{-- Scripts --}}
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    {{-- Vite Build (CSS + JS bundled - MUCH faster than CDN) --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Livewire Upload Debug --}}
     <script>
-        // Polyfill/Alias for components expecting SwiperModules
-        window.SwiperModules = [Swiper.Navigation, Swiper.Pagination, Swiper.Autoplay, Swiper.EffectFade];
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('upload:start', (name, file) => {
+                console.log('🚀 Upload Started:', name);
+                console.log('File:', file);
+            });
+
+            Livewire.hook('upload:error', (name, error) => {
+                console.group('❌ Upload Error (401 Debug)');
+                console.error('File:', name);
+                console.error('Error Message:', error);
+                console.warn('Possibilities: Session Expired, Cookie Domain Mismatch, or File Size Limit detected as Auth Error.');
+                console.groupEnd();
+            });
+        });
     </script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-primary': '#63ab45',
-                        'brand-accent': '#f7921e',
-                        'brand-dark': '#1d231f',
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        hand: ['"Just Another Hand"', 'cursive'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </head>
 <body class="font-sans antialiased text-brand-dark bg-white selection:bg-brand-accent selection:text-white overflow-x-hidden">
     
@@ -201,7 +268,7 @@
             <div class="container mx-auto px-4 py-6 space-y-2">
                 @foreach($navMenus as $menu)
                     <div x-data="{ open: false }" class="border-b border-white/5 last:border-0">
-                        @if($menu->children->count() > 0)
+                        @if($menu->effectiveChildren->count() > 0)
                             <button @click="open = !open" 
                                     class="flex items-center justify-between w-full py-3 text-white hover:text-brand-accent transition-colors text-left">
                                 <span class="font-semibold">{{ $menu->name }}</span>
@@ -210,16 +277,37 @@
                                 </svg>
                             </button>
                             <div x-show="open" x-collapse class="pl-4 pb-3 space-y-1">
-                                @foreach($menu->children as $child)
-                                    <a href="{{ $child->url ?? '#' }}" 
-                                       @click="mobileMenuOpen = false"
-                                       class="block py-2 text-white/70 hover:text-brand-accent transition-colors text-sm">
-                                        {{ $child->name }}
-                                    </a>
+                                @foreach($menu->effectiveChildren as $child)
+                                    @if($child->effectiveChildren->count() > 0)
+                                        <div x-data="{ subOpen: false }">
+                                            <button @click="subOpen = !subOpen" 
+                                                    class="flex items-center justify-between w-full py-2 text-white/70 hover:text-brand-accent transition-colors text-sm text-left">
+                                                <span>{{ $child->name }}</span>
+                                                <svg class="w-3 h-3 transition-transform" :class="{ 'rotate-180': subOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                                </svg>
+                                            </button>
+                                            <div x-show="subOpen" x-collapse class="pl-4 space-y-1">
+                                                @foreach($child->effectiveChildren as $subChild)
+                                                    <a href="{{ $subChild->link }}" 
+                                                       @click="mobileMenuOpen = false"
+                                                       class="block py-1.5 text-white/50 hover:text-brand-accent transition-colors text-xs">
+                                                        {{ $subChild->name }}
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @else
+                                        <a href="{{ $child->link }}" 
+                                           @click="mobileMenuOpen = false"
+                                           class="block py-2 text-white/70 hover:text-brand-accent transition-colors text-sm">
+                                            {{ $child->name }}
+                                        </a>
+                                    @endif
                                 @endforeach
                             </div>
                         @else
-                            <a href="{{ $menu->url ?? '#' }}" 
+                            <a href="{{ $menu->link }}" 
                                @click="mobileMenuOpen = false"
                                class="block py-3 text-white hover:text-brand-accent transition-colors font-semibold">
                                 {{ $menu->name }}

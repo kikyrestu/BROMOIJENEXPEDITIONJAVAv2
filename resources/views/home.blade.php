@@ -92,8 +92,8 @@
                             }
                             $destinationsData['badge'] = $data['badge_text'] ?? $data['badge'] ?? null;
                             
-                            // Always fetch ALL destinations from database
-                            $destinations = \App\Models\Destination::all();
+                            // Always fetch ALL destinations from database, ordered
+                            $destinations = \App\Models\Destination::orderBy('sort_order')->get();
                         @endphp
                         <x-sections.exclusive-destinations :destinations="$destinations" :data="$destinationsData" />
                         @break
@@ -195,15 +195,15 @@
                             
                             // If no manual testimonials, fetch from database
                             if(empty($testimonialsList)) {
-                                $testimonialsList = \App\Models\Testimonial::where('status', 'published')
+                                $testimonialsList = \App\Models\Testimonial::publiclyVisible()
                                     ->orderBy('created_at', 'desc')
                                     ->get()
                                     ->map(function($t) {
                                         return [
                                             'name' => $t->name,
-                                            'role' => $t->role ?? $t->position ?? 'Traveler',
+                                            'role' => $t->display_role,
                                             'content' => $t->content ?? $t->message ?? $t->review,
-                                            'avatar' => $t->avatar ?? $t->photo,
+                                            'avatar' => $t->display_photo_url,
                                             'rating' => $t->rating ?? 5,
                                         ];
                                     })
@@ -227,7 +227,7 @@
                             if(($data['auto_fetch'] ?? true)) {
                                  // Default logic if not specified in block (though block defaults to true)
                                  $limit = (int)($data['post_count'] ?? 3);
-                                 $latest_posts = \App\Models\Blog::where('status', 'published')->latest()->take($limit)->get();
+                                 $latest_posts = \App\Models\Blog::with(['category', 'author'])->where('status', 'published')->latest()->take($limit)->get();
                             }
                         @endphp
                         

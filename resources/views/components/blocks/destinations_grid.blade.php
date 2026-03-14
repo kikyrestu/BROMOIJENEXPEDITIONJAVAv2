@@ -3,10 +3,10 @@
 @php
     $selectedIds = $data['destinations'] ?? [];
     if (!empty($selectedIds)) {
-        $destinations = \App\Models\Destination::whereIn('id', $selectedIds)->get();
+        $destinations = \App\Models\Destination::whereIn('id', $selectedIds)->orderBy('sort_order')->get();
     } else {
         // Fallback: Show featured destinations if none selected in block
-        $destinations = \App\Models\Destination::where('is_featured', true)->limit(3)->get();
+        $destinations = \App\Models\Destination::where('is_featured', true)->orderBy('sort_order')->limit(4)->get();
     }
 @endphp
 
@@ -30,20 +30,21 @@
     </div>
 
     @if($destinations->count() >= 1)
-        {{-- Flex Layout for Centered Cards --}}
-        <div class="flex flex-wrap justify-center gap-8 max-w-[1400px] mx-auto px-4">
+        {{-- Grid Layout: always 1 row --}}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-[1400px] mx-auto px-4">
             
             @foreach($destinations as $destination)
                 <a href="#" class="group relative block transition-transform hover:-translate-y-2 duration-500">
                     
                     {{-- Destination Card --}}
-                    <div class="group relative block w-full max-w-[320px] aspect-[3/5] mx-auto overflow-hidden bg-white shadow-lg 
+                    <div class="group relative block w-full aspect-[3/5] mx-auto overflow-hidden bg-white shadow-lg 
                                 rounded-tl-[120px] rounded-bl-[50px] rounded-br-[50px] rounded-tr-none 
                                 hover:rounded-tr-[50px] transition-all duration-500 ease-in-out">
                         
                         {{-- Image --}}
                         <div class="h-full w-full">
                             <img src="{{ $destination->thumbnail_path ? Storage::disk('public')->url($destination->thumbnail_path) : 'https://placehold.co/600x800?text='.urlencode($destination->name) }}" 
+                                 loading="lazy" 
                                  alt="{{ $destination->name }}" 
                                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
                         </div>

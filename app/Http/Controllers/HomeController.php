@@ -26,7 +26,7 @@ class HomeController extends Controller
         $latest_posts = \App\Models\Blog::where('status', 'published')->latest()->take(3)->get();
 
         // 5. Fetch Testimonials
-        $testimonials = \App\Models\Testimonial::where('status', 'published')->latest()->take(6)->get();
+        $testimonials = \App\Models\Testimonial::publiclyVisible()->latest()->take(6)->get();
 
         // dd([
         //     'Page Title' => $page->title,

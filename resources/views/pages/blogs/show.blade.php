@@ -1,12 +1,50 @@
-<x-app-layout>
+@php
+    $blogSeo = $blog->seo ?? new \App\Models\SeoMetadata([
+        'meta_title' => $blog->title,
+        'meta_description' => \Illuminate\Support\Str::limit(strip_tags($blog->content ?? ''), 160),
+        'og_type' => 'article',
+    ]);
+    if (!$blogSeo->meta_title) $blogSeo->meta_title = $blog->title;
+    if (!$blogSeo->meta_description) $blogSeo->meta_description = \Illuminate\Support\Str::limit(strip_tags($blog->content ?? ''), 160);
+    $blogSeo->og_type = 'article';
+@endphp
+<x-app-layout :seo="$blogSeo">
+
+    @push('structured-data')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "{{ $blog->title }}",
+        "description": "{{ $blogSeo->meta_description }}",
+        "url": "{{ url()->current() }}",
+        @if($blog->thumbnail_path)"image": "{{ asset('storage/' . $blog->thumbnail_path) }}",@endif
+        "datePublished": "{{ $blog->created_at?->toIso8601String() }}",
+        "dateModified": "{{ $blog->updated_at?->toIso8601String() }}",
+        "author": {
+            "@type": "Organization",
+            "name": "Bromo Ijen Expedition Java"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Bromo Ijen Expedition Java"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ url()->current() }}"
+        }
+    }
+    </script>
+    @endpush
+
     {{-- Hero Image --}}
-    <div class="relative h-[50vh] min-h-[400px] overflow-hidden">
+    <div class="relative h-[55vh] min-h-[450px] overflow-hidden">
         <img src="{{ $blog->thumbnail_path ? asset('storage/' . $blog->thumbnail_path) : 'https://placehold.co/1920x800?text=' . urlencode($blog->title) }}" 
              alt="{{ $blog->title }}"
              class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"></div>
         
-        <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-20">
+        <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-20 pt-24">
             <div class="container mx-auto">
                 <div class="max-w-4xl">
                      <span class="inline-block bg-brand-primary text-white text-xs font-bold px-3 py-1.5 rounded-full mb-4 uppercase tracking-wider">

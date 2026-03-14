@@ -3,7 +3,6 @@
 @php
     $badge = $data['badge'] ?? 'Our Memories';
     
-    // Defaults
     $defaultPrefix = 'Capture The';
     $defaultSuffix = 'Moments';
     
@@ -17,19 +16,11 @@
 
     $description = $data['description'] ?? 'Explore the beauty of East Java through our lens. From the sunrise of Bromo to the blue fire of Ijen.';
     
-    // Images Logic
-    // Default static images if no data provided
-    $images = $data['images'] ?? [];
-    if (empty($images)) {
-        $images = [
-            ['image' => 'https://placehold.co/800x800?text=Bromo+Sunrise', 'size' => 'large', 'caption' => 'Golden Sunrise'],
-            ['image' => 'https://placehold.co/400x400?text=Jeep+Ride', 'size' => 'small', 'caption' => 'Jeep Adventure'],
-            ['image' => 'https://placehold.co/400x400?text=Ijen+Crater', 'size' => 'small', 'caption' => 'Blue Fire'],
-            ['image' => 'https://placehold.co/800x800?text=Savana', 'size' => 'tall', 'caption' => 'Savana Hills'],
-            ['image' => 'https://placehold.co/400x400?text=People', 'size' => 'small', 'caption' => 'Happy Travelers'],
-            ['image' => 'https://placehold.co/800x400?text=Milky+Way', 'size' => 'wide', 'caption' => 'Milky Way']
-        ];
-    }
+    // Pull from Gallery model only
+    $galleryItems = \App\Models\Gallery::orderBy('sort_order')->take(6)->get();
+
+    // Layout sizes for masonry grid
+    $sizes = ['large', 'small', 'small', 'tall', 'small', 'wide'];
 @endphp
 
 <section class="py-16 md:py-24 bg-white relative font-sans overflow-hidden" x-data="{ showLightbox: false, activeSrc: '', activeAlt: '' }">
@@ -52,56 +43,56 @@
             </p>
         </div>
 
-        {{-- Gallery Grid --}}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            
-            @foreach($images as $img)
-                @php 
-                    $src = $img['image'] ?? null;
-                    if (empty($src)) {
-                        $imgUrl = 'https://placehold.co/800x800?text=No+Image';
-                    } elseif (filter_var($src, FILTER_VALIDATE_URL)) {
-                        $imgUrl = $src;
-                    } else {
-                        $imgUrl = \Illuminate\Support\Facades\Storage::url($src);
-                    }
-                    // Quick fix for placeholder URLs which are valid URLs
-                    if (str_contains($img['image'], 'placehold.co')) { $imgUrl = $img['image']; }
-                    
-                    $size = $img['size'] ?? 'small';
-                    $sizeClass = match ($size) {
-                        'large' => 'col-span-2 row-span-2',
-                        'wide' => 'col-span-2 row-span-1',
-                        'tall' => 'col-span-1 row-span-2',
-                        default => 'col-span-1 row-span-1', // small
-                    };
-                    $caption = $img['caption'] ?? '';
-                @endphp
-
-                <div class="{{ $sizeClass }} group relative rounded-3xl overflow-hidden cursor-pointer"
-                     @click="showLightbox = true; activeSrc = '{{ $imgUrl }}'; activeAlt = '{{ $caption }}'">
-                    <img src="{{ $imgUrl }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
-                    
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                            </svg>
+        @if($galleryItems->isNotEmpty())
+            {{-- Gallery Grid --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                @foreach($galleryItems as $index => $item)
+                    @php
+                        $size = $sizes[$index] ?? 'small';
+                        $sizeClass = match ($size) {
+                            'large' => 'col-span-2 row-span-2',
+                            'wide' => 'col-span-2 row-span-1',
+                            'tall' => 'col-span-1 row-span-2',
+                            default => 'col-span-1 row-span-1',
+                        };
+                    @endphp
+                    <div class="{{ $sizeClass }} group relative rounded-3xl overflow-hidden cursor-pointer"
+                         @click="showLightbox = true; activeSrc = '{{ $item->original_url }}'; activeAlt = '{{ addslashes($item->alt_text ?? $item->title) }}'">
+                        <img src="{{ $item->display_url }}" 
+                             alt="{{ $item->alt_text ?? $item->title }}"
+                             loading="lazy"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                        
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                </svg>
+                            </div>
                         </div>
+
+                        @if($item->title)
+                            <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                 <span class="text-white font-bold text-shadow-sm">{{ $item->title }}</span>
+                            </div>
+                        @endif
                     </div>
-
-                    @if(!empty($caption))
-                        <div class="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                             <span class="text-white font-bold text-shadow-sm">{{ $caption }}</span>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-
-        </div>
+                @endforeach
+            </div>
+        @else
+            {{-- Empty State --}}
+            <div class="text-center py-16 text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+                </svg>
+                <p class="text-lg font-medium">No gallery images yet</p>
+                <p class="text-sm mt-1">Add photos via the admin panel</p>
+            </div>
+        @endif
 
          {{-- View More Text --}}
+         @if($galleryItems->isNotEmpty())
          <div class="text-center mt-10">
             <a href="{{ route('gallery.index') }}" class="inline-flex flex-col items-center gap-2 text-slate-400 font-bold hover:text-brand-primary transition-colors group">
                 <span class="tracking-widest uppercase text-xs">View More</span>
@@ -112,6 +103,7 @@
                 </div>
             </a>
          </div>
+         @endif
 
     </div>
 

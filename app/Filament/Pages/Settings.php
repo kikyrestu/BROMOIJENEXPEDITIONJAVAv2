@@ -88,7 +88,7 @@ class Settings extends Page implements HasForms
                                     ->image()
                                     ->disk('public')
                                     ->directory('settings')
-                                    ->acceptedFileTypes(['image/x-icon', 'image/png']),
+                                    ->acceptedFileTypes(['image/x-icon', 'image/png', 'image/svg+xml', 'image/jpeg', 'image/webp']),
                             ])->columns(2),
 
                         // 3. SEO Default Settings
@@ -131,7 +131,7 @@ class Settings extends Page implements HasForms
                                     ]),
                             ]),
 
-                        // 5. Template Selection
+                        // 5. Template & Page Heroes
                         \Filament\Schemas\Components\Tabs\Tab::make('Appearance')
                             ->schema([
                                 \Filament\Forms\Components\Select::make('active_template')
@@ -143,6 +143,32 @@ class Settings extends Page implements HasForms
                                     ])
                                     ->default('gotur')
                                     ->required(),
+
+                                \Filament\Schemas\Components\Section::make('Page Hero Images')
+                                    ->description('Background images for each page hero section. Recommended size: 1920x600px.')
+                                    ->schema([
+                                        \Filament\Forms\Components\FileUpload::make('hero_image_packages')
+                                            ->label('Packages Page Hero')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('heroes')
+                                            ->imageResizeMode('cover')
+                                            ->imageCropAspectRatio('16:5'),
+                                        \Filament\Forms\Components\FileUpload::make('hero_image_blogs')
+                                            ->label('Blogs Page Hero')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('heroes')
+                                            ->imageResizeMode('cover')
+                                            ->imageCropAspectRatio('16:5'),
+                                        \Filament\Forms\Components\FileUpload::make('hero_image_gallery')
+                                            ->label('Gallery Page Hero')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('heroes')
+                                            ->imageResizeMode('cover')
+                                            ->imageCropAspectRatio('16:5'),
+                                    ])->columns(3),
                             ]),
 
                         // 5b. Header Button

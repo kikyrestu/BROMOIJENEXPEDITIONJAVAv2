@@ -58,6 +58,8 @@ class DestinationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('sort_order')
+            ->defaultSort('sort_order')
             ->columns([
                 Tables\Columns\ImageColumn::make('thumbnail_path')
                     ->disk('public')

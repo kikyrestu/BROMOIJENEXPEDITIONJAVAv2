@@ -73,15 +73,19 @@ class PackageResource extends Resource
                                         Forms\Components\TextInput::make('location')
                                             ->placeholder('e.g. East Java, Indonesia'),
                                         
-                                        Forms\Components\Select::make('category')
-                                            ->options([
-                                                'Adventure' => 'Adventure',
-                                                'Cultural' => 'Cultural',
-                                                'Photography' => 'Photography',
-                                                'Family' => 'Family',
-                                                'Luxury' => 'Luxury',
+                                        Forms\Components\Select::make('category_id')
+                                            ->label('Category')
+                                            ->relationship('categoryRelation', 'name', fn ($query) => $query->where('type', 'package'))
+                                            ->searchable()
+                                            ->preload()
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('name')
+                                                    ->required()
+                                                    ->live(onBlur: true)
+                                                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                                                Forms\Components\TextInput::make('slug')->required(),
+                                                Forms\Components\Hidden::make('type')->default('package'),
                                             ])
-                                            ->default('Adventure')
                                             ->required(),
                                         Forms\Components\Select::make('status')
                                             ->options([
@@ -209,6 +213,7 @@ class PackageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('categoryRelation.name')->label('Category')->sortable(),
                 Tables\Columns\TextColumn::make('destination.name')->sortable(),
                 Tables\Columns\TextColumn::make('price_start_from')->money('IDR'),
                 Tables\Columns\TextColumn::make('duration_days')->label('Days'),
