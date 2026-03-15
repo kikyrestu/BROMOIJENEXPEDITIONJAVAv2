@@ -73,47 +73,68 @@ class SeoDashboard extends Page
 
     public function regenerateSitemap()
     {
-        $urls = [];
-        $baseUrl = rtrim(config('app.url'), '/'); // Always use APP_URL from .env
-        
-        // Harvest URLs
-        // Pages (no status column, get all)
+        $urls = []; // Each entry: ['loc' => url, 'priority' => float, 'changefreq' => string]
+        $baseUrl = rtrim(config('app.url'), '/');
+        $today = date('Y-m-d');
+
+        // Homepage
+        $urls[] = ['loc' => $baseUrl . '/', 'priority' => '1.0', 'changefreq' => 'daily'];
+
+        // Static index pages
+        $urls[] = ['loc' => $baseUrl . '/packages', 'priority' => '0.9', 'changefreq' => 'weekly'];
+        $urls[] = ['loc' => $baseUrl . '/destinations', 'priority' => '0.9', 'changefreq' => 'weekly'];
+        $urls[] = ['loc' => $baseUrl . '/blogs', 'priority' => '0.8', 'changefreq' => 'weekly'];
+        $urls[] = ['loc' => $baseUrl . '/gallery', 'priority' => '0.7', 'changefreq' => 'weekly'];
+        $urls[] = ['loc' => $baseUrl . '/reviews', 'priority' => '0.6', 'changefreq' => 'monthly'];
+
+        // CMS Pages (exclude homepage — already added above)
         $pages = \App\Models\Page::all();
-        foreach($pages as $page) {
-            // Handle homepage specially
-            $slug = $page->slug === 'home' ? '' : $page->slug;
-            $urls[] = $baseUrl . '/' . $slug;
-        }
-        
-        // Packages (PLURAL route!)
-        $packages = \App\Models\Package::all();
-        foreach($packages as $pkg) {
-            $urls[] = $baseUrl . '/packages/' . $pkg->slug;
+        foreach ($pages as $page) {
+            if ($page->slug === 'home') continue;
+            $urls[] = ['loc' => $baseUrl . '/' . $page->slug, 'priority' => '0.7', 'changefreq' => 'monthly'];
         }
 
-        // Blogs
+        // Destinations
+        $destinations = \App\Models\Destination::all();
+        foreach ($destinations as $dest) {
+            $urls[] = ['loc' => $baseUrl . '/destinations/' . $dest->slug, 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
+
+        // Package categories
+        $packageCategories = \App\Models\Category::where('type', 'package')->get();
+        foreach ($packageCategories as $cat) {
+            $urls[] = ['loc' => $baseUrl . '/packages/category/' . $cat->slug, 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
+
+        // Individual packages
+        $packages = \App\Models\Package::where('status', 'published')->get();
+        foreach ($packages as $pkg) {
+            $urls[] = ['loc' => $baseUrl . '/packages/' . $pkg->slug, 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
+
+        // Published blogs
         $blogs = \App\Models\Blog::where('status', 'published')->get();
-        foreach($blogs as $blog) {
-            $urls[] = $baseUrl . '/blogs/' . $blog->slug;
+        foreach ($blogs as $blog) {
+            $urls[] = ['loc' => $baseUrl . '/blogs/' . $blog->slug, 'priority' => '0.7', 'changefreq' => 'monthly'];
         }
 
         // Generate XML
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        foreach($urls as $url) {
-            $xml .= '<url>';
-            $xml .= '<loc>' . htmlspecialchars($url) . '</loc>';
-            $xml .= '<lastmod>' . date('Y-m-d') . '</lastmod>';
-            $xml .= '<changefreq>weekly</changefreq>';
-            $xml .= '<priority>0.8</priority>';
-            $xml .= '</url>';
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        foreach ($urls as $entry) {
+            $xml .= '  <url>' . "\n";
+            $xml .= '    <loc>' . htmlspecialchars($entry['loc']) . '</loc>' . "\n";
+            $xml .= '    <lastmod>' . $today . '</lastmod>' . "\n";
+            $xml .= '    <changefreq>' . $entry['changefreq'] . '</changefreq>' . "\n";
+            $xml .= '    <priority>' . $entry['priority'] . '</priority>' . "\n";
+            $xml .= '  </url>' . "\n";
         }
-        $xml .= '</urlset>';
+        $xml .= '</urlset>' . "\n";
 
         file_put_contents(public_path('sitemap.xml'), $xml);
 
         \Filament\Notifications\Notification::make()
-            ->title('Sitemap Generated Successfully')
+            ->title('Sitemap Generated — ' . count($urls) . ' URLs')
             ->success()
             ->send();
 
