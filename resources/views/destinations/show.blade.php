@@ -40,36 +40,34 @@
     @endpush
 
     {{-- Hero Section --}}
-    <section class="relative h-[45vh] min-h-[300px] md:h-[60vh] md:min-h-[400px] flex items-center justify-center overflow-hidden">
-        {{-- Background Image --}}
-        @php
-            $heroImage = $destination->thumbnail_path;
-            if (!empty($heroImage) && !str_starts_with($heroImage, 'http')) {
-                $heroImage = \Illuminate\Support\Facades\Storage::url($heroImage);
-            } elseif (empty($heroImage)) {
-                $heroImage = 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=1600';
-            }
-        @endphp
-        <div class="absolute inset-0">
-            <img src="{{ $heroImage }}" alt="{{ $destination->name }}" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"></div>
+    @php
+        $heroImage = $destination->thumbnail_path;
+        if (!empty($heroImage) && !str_starts_with($heroImage, 'http')) {
+            $heroImage = \Illuminate\Support\Facades\Storage::url($heroImage);
+        } elseif (empty($heroImage)) {
+            $heroImage = 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=1600';
+        }
+    @endphp
+    <div class="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 bg-brand-dark">
+            <img src="{{ $heroImage }}" alt="{{ $destination->name }}" class="w-full h-full object-cover opacity-50">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent"></div>
         </div>
-        
-        {{-- Content --}}
-        <div class="relative z-10 text-center text-white px-4">
-            <nav class="flex items-center justify-center gap-2 text-sm text-white/70 mb-4">
+
+        <div class="container mx-auto px-6 md:px-12 lg:px-20 relative z-10 text-center">
+            <nav class="flex items-center justify-center gap-2 text-sm text-white/70 mb-6">
                 <a href="{{ route('home') }}" class="hover:text-white transition">Home</a>
                 <span>/</span>
                 <a href="{{ route('destinations.index') }}" class="hover:text-white transition">Destinations</a>
                 <span>/</span>
-                <span class="text-white">{{ $destination->name }}</span>
+                <span class="text-white font-medium">{{ $destination->name }}</span>
             </nav>
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 font-hand tracking-wide">{{ $destination->name }}</h1>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6 font-hand">{{ $destination->name }}</h1>
             @if($destination->description)
-            <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto">{{ $destination->description }}</p>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">{{ $destination->description }}</p>
             @endif
         </div>
-    </section>
+    </div>
 
     {{-- Packages Section --}}
     @if($destination->packages->count() > 0)
