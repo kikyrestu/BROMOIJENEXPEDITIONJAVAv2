@@ -61,7 +61,7 @@
                                 }
                             @endphp
                             <img src="{{ $thumb }}" 
-                                 alt="{{ $destination->name }}" 
+                                 alt="{{ $destination->name }}" loading="lazy"
                                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
                         </div>
 

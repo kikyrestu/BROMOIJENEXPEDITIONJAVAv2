@@ -235,7 +235,7 @@
 
                 {{-- Mobile Menu Button --}}
                 <button @click="mobileMenuOpen = !mobileMenuOpen" 
-                        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-white hover:bg-white/10 transition-colors"
+                        class="lg:hidden flex items-center justify-center w-11 h-11 rounded-lg text-white hover:bg-white/10 transition-colors"
                         :aria-expanded="mobileMenuOpen"
                         aria-label="Toggle mobile menu">
                     <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

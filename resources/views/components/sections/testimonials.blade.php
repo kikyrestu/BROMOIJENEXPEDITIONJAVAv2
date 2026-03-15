@@ -88,7 +88,7 @@
                             </p>
 
                             <div class="flex items-center gap-3 sm:gap-4 mt-auto">
-                                <img src="https://ui-avatars.com/api/?name=Sarah+Jenner&background=random" class="w-14 h-14 rounded-full object-cover">
+                                <img src="https://ui-avatars.com/api/?name=Sarah+Jenner&background=random" loading="lazy" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Sarah Jenner</h4>
                                     <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Australia</p>
@@ -116,7 +116,7 @@
                             </p>
 
                             <div class="flex items-center gap-3 sm:gap-4 mt-auto">
-                                <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=random" class="w-14 h-14 rounded-full object-cover">
+                                <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=random" loading="lazy" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Michael Chen</h4>
                                     <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Singapore</p>
@@ -144,7 +144,7 @@
                             </p>
 
                             <div class="flex items-center gap-3 sm:gap-4 mt-auto">
-                                <img src="https://ui-avatars.com/api/?name=Emma+Watson&background=random" class="w-14 h-14 rounded-full object-cover">
+                                <img src="https://ui-avatars.com/api/?name=Emma+Watson&background=random" loading="lazy" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">Emma Watson</h4>
                                     <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">United Kingdom</p>
@@ -171,7 +171,7 @@
                             </p>
 
                             <div class="flex items-center gap-3 sm:gap-4 mt-auto">
-                                <img src="https://ui-avatars.com/api/?name=David+Kim&background=random" class="w-14 h-14 rounded-full object-cover">
+                                <img src="https://ui-avatars.com/api/?name=David+Kim&background=random" loading="lazy" class="w-14 h-14 rounded-full object-cover">
                                 <div>
                                     <h4 class="font-bold text-brand-dark text-lg">David Kim</h4>
                                     <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">South Korea</p>

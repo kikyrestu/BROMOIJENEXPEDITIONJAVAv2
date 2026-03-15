@@ -26,8 +26,8 @@
                         <div class="bg-slate-900 rounded-3xl overflow-hidden border border-white/5 h-full flex flex-col group hover:border-brand-accent/50 transition duration-500">
                             {{-- Image --}}
                             <div class="relative h-64 overflow-hidden">
-                                <img src="{{ $package->destination->thumbnail_path ? asset('storage/'.$package->destination->thumbnail_path) : 'https://via.placeholder.com/800x600' }}" 
-                                     alt="{{ $package->name }}" 
+                                <img src="{{ $package->destination->thumbnail_path ? asset('storage/'.$package->destination->thumbnail_path) : 'https://via.placeholder.com/800x600' }}"
+                                     alt="{{ $package->name }}" loading="lazy"
                                      class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                                 @if($package->is_exclusive)
                                     <span class="absolute top-4 right-4 bg-brand-accent text-slate-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Exclusive</span>
@@ -48,7 +48,7 @@
                                         <span class="text-xs text-slate-500 block">Start from</span>
                                         <span class="text-lg font-bold text-white">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                                     </div>
-                                    <a href="{{ route('packages.show', $package->slug) }}" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-brand-accent group-hover:text-slate-900 transition">
+                                    <a href="{{ route('packages.show', $package->slug) }}" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-brand-accent group-hover:text-slate-900 transition">
                                         &nearr;
                                     </a>
                                 </div>

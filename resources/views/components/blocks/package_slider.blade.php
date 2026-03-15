@@ -90,7 +90,7 @@
         <div class="swiper !overflow-visible" id="{{ $sliderId }}_swiper">
             <div class="swiper-wrapper py-4 pb-12">
                 @foreach($packages as $package)
-                    <div class="swiper-slide !w-[320px] md:!w-[380px] h-auto transition-all duration-300"
+                    <div class="swiper-slide !w-[280px] md:!w-[380px] h-auto transition-all duration-300"
                          x-show="isVisible('{{ $package->destination->name ?? '' }}')"
                          x-transition:enter="transition ease-out duration-300"
                          x-transition:enter-start="opacity-0 scale-95"
@@ -109,10 +109,10 @@
                                 {{-- Top Badges --}}
                                 <div class="absolute top-2 left-2 flex flex-col gap-1">
                                     @if($package->is_exclusive)
-                                        <span class="bg-brand-accent text-white text-[9px] font-bold px-2 py-0.5 rounded">Exclusive</span>
+                                        <span class="bg-brand-accent text-white text-[11px] font-bold px-2 py-0.5 rounded">Exclusive</span>
                                     @endif
                                     @if($package->is_featured ?? false)
-                                        <span class="bg-brand-primary text-white text-[9px] font-bold px-2 py-0.5 rounded">Hot</span>
+                                        <span class="bg-brand-primary text-white text-[11px] font-bold px-2 py-0.5 rounded">Hot</span>
                                     @endif
                                 </div>
 

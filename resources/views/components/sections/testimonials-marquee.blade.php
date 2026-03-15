@@ -88,7 +88,7 @@
             {{-- Loop Twice for seamless infinite scroll --}}
             @for ($i = 0; $i < 2; $i++)
                 @foreach ($testimonials as $testimonial)
-                    <div class="w-[320px] md:w-[400px] bg-white border border-slate-100 p-8 rounded-[30px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300 flex-shrink-0 flex flex-col relative group/card">
+                    <div class="w-[280px] md:w-[400px] bg-white border border-slate-100 p-6 md:p-8 rounded-[30px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-xl transition-all duration-300 flex-shrink-0 flex flex-col relative group/card">
                         
                         {{-- Quote Icon --}}
                         <div class="absolute top-8 right-8 text-brand-primary/10 group-hover/card:text-brand-primary/20 transition-colors">
@@ -110,7 +110,7 @@
                         </p>
                         
                         <div class="flex items-center gap-4 mt-auto relative z-10 border-t border-slate-50 pt-6">
-                            <img src="{{ $toAvatarUrl($testimonial) }}" alt="{{ $testimonial->name }}" class="w-12 h-12 rounded-full border border-slate-100">
+                            <img src="{{ $toAvatarUrl($testimonial) }}" alt="{{ $testimonial->name }}" loading="lazy" class="w-12 h-12 rounded-full border border-slate-100">
                             <div>
                                 <h4 class="text-brand-dark font-bold text-base">{{ $testimonial->name }}</h4>
                                 <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">{{ $testimonial->role }}</p>

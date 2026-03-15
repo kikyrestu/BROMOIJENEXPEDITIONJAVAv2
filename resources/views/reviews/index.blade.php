@@ -52,7 +52,7 @@
 @endpush
 
     {{-- Hero Section --}}
-    <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <div class="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
             <img src="{{ asset('images/heroes/hero-3_optimized.webp') }}" alt="Nusa Penida landscape" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
@@ -154,7 +154,7 @@
                                         : 'https://ui-avatars.com/api/?name=' . urlencode($review->name) . '&background=10b981&color=fff&size=80');
                             @endphp
                             <img src="{{ $avatar }}"
-                                 alt="{{ $review->name }}"
+                                 alt="{{ $review->name }}" loading="lazy"
                                  class="w-10 h-10 rounded-full object-cover border-2 border-slate-100"
                                  loading="lazy">
                             <div>

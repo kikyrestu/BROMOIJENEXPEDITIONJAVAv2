@@ -187,7 +187,7 @@ data-block-index="{{ $attributes->get('data-block-index') }}">
                         <img src="https://ui-avatars.com/api/?name={{ urlencode($data['founder_name'] ?? 'Admin Bromo') }}&background=random" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
                         <div class="text-left">
                             <h5 class="font-bold text-brand-dark text-sm" x-text="founderName" data-field="founder_name">{!! $data['founder_name'] ?? 'Agus Setiawan' !!}</h5>
-                            <p class="text-[10px] text-slate-400" x-text="founderRole" data-field="founder_role">{!! $data['founder_role'] ?? 'Founder, BromoIjen' !!}</p>
+                            <p class="text-[11px] text-slate-400" x-text="founderRole" data-field="founder_role">{!! $data['founder_role'] ?? 'Founder, BromoIjen' !!}</p>
                         </div>
                     </div>
                 </div>

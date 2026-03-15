@@ -16,7 +16,7 @@
                 {{-- Card 1: Large (Left) - col-span-7 --}}
                 @php $first = $destinations[0]; @endphp
                 <div class="col-span-1 md:col-span-7 relative group rounded-3xl overflow-hidden h-[400px] md:h-full">
-                    <img src="{{ asset('storage/' . $first->thumbnail_path) }}" alt="{{ $first->name }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <img src="{{ asset('storage/' . $first->thumbnail_path) }}" alt="{{ $first->name }}" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                     
                     {{-- Glassmorphism Overlay --}}
@@ -35,7 +35,7 @@
                 <div class="col-span-1 md:col-span-5 flex flex-col gap-6 h-full">
                     @foreach($destinations->slice(1, 2) as $dest)
                         <div class="relative group rounded-3xl overflow-hidden flex-1">
-                            <img src="{{ asset('storage/' . $dest->thumbnail_path) }}" alt="{{ $dest->name }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                            <img src="{{ asset('storage/' . $dest->thumbnail_path) }}" alt="{{ $dest->name }}" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             
                             <div class="absolute bottom-4 left-4 right-4 p-4 bg-white/10 backdrop-blur-md border border-white/10 rounded-xl transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">

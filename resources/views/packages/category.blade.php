@@ -7,7 +7,7 @@
 
 <x-app-layout :seo="$seo">
     {{-- Hero Section --}}
-    <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <div class="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
             <img src="{{ asset('images/heroes/hero-1_optimized.webp') }}" alt="{{ $category->name }}" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
@@ -52,20 +52,20 @@
         <div class="container mx-auto px-6 md:px-12 lg:px-20">
 
             @if($packages->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 mb-12">
                     @foreach($packages as $package)
                         <div class="group flex flex-col h-full bg-white rounded-3xl overflow-hidden shadow-[0_2px_20px_rgba(0,0,0,0.05)] border border-slate-100 hover:shadow-xl transition-all duration-300">
                             {{-- Image --}}
                             <div class="relative aspect-[4/3] overflow-hidden">
                                 <a href="{{ route('packages.show', $package->slug) }}">
                                     <img src="{{ Storage::url($package->thumbnail ?? $package->destination->image_path) }}" 
-                                         alt="{{ $package->name }}"
+                                         alt="{{ $package->name }}" loading="lazy"
                                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 </a>
                                 
                                 {{-- Price Badge --}}
                                 <div class="absolute top-4 left-4 bg-brand-accent text-white px-4 py-2 rounded-xl flex flex-col items-center justify-center shadow-lg">
-                                    <span class="text-[10px] uppercase font-bold opacity-90">Start From</span>
+                                    <span class="text-[11px] uppercase font-bold opacity-90">Start From</span>
                                     <span class="text-sm font-bold">IDR {{ number_format($package->price_start_from, 0, ',', '.') }}</span>
                                 </div>
 

@@ -1,7 +1,7 @@
 <x-app-layout>
     {{-- Hero Section --}}
     @php $heroImg = \App\Models\Setting::where('key', 'hero_image_gallery')->value('value'); @endphp
-    <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <div class="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
             <img src="{{ $heroImg ? Storage::disk('public')->url($heroImg) : asset('images/heroes/hero-1_optimized.webp') }}" alt="Bromo Ijen Expedition Gallery" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
@@ -54,7 +54,7 @@
                      x-show="activeCategory === 'all' || activeCategory === '{{ $image->category }}'"
                      x-transition>
                     <img src="{{ $image->display_url }}" 
-                         alt="{{ $image->alt_text ?? $image->title }}" 
+                         alt="{{ $image->alt_text ?? $image->title }}" loading="lazy"
                          class="w-full object-cover transition-transform duration-500 group-hover:scale-110"
                          loading="lazy">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">

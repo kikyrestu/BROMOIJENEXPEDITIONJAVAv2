@@ -12,7 +12,7 @@
             <a href="{{ $social['url'] }}" 
                target="_blank" 
                rel="noopener noreferrer"
-               class="w-10 h-10 bg-slate-800/90 hover:bg-brand-primary text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg backdrop-blur-sm"
+               class="w-11 h-11 bg-slate-800/90 hover:bg-brand-primary text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg backdrop-blur-sm"
                title="{{ $social['name'] ?? '' }}">
                 @switch($social['platform'] ?? '')
                     @case('facebook')
@@ -64,7 +64,7 @@
          style="display: none;"
          x-cloak>
         <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" 
-                class="w-10 h-10 bg-brand-primary hover:bg-brand-dark text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
+                class="w-11 h-11 bg-brand-primary hover:bg-brand-dark text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
                 title="Back to Top">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>

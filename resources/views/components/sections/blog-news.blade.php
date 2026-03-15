@@ -128,12 +128,12 @@
                         {{-- Date Badge --}}
                         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-dark w-12 h-14 rounded-xl flex flex-col items-center justify-center shadow-lg border border-white/50">
                             <span class="text-lg font-extrabold leading-none">{{ $post['date_day'] }}</span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-primary">{{ $post['date_month'] }}</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-brand-primary">{{ $post['date_month'] }}</span>
                         </div>
 
                         {{-- Category Badge --}}
                         <div class="absolute top-4 right-4">
-                            <span class="inline-block bg-brand-primary text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+                            <span class="inline-block bg-brand-primary text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
                                 {{ $post['category'] }}
                             </span>
                         </div>

@@ -59,7 +59,7 @@
                 
                 {{-- Main Image --}}
                 <div class="relative z-10 w-[65%] ml-auto lg:ml-8 aspect-[4/5] rounded-tl-[60px] rounded-br-[30px] overflow-hidden shadow-xl border-4 border-white">
-                    <img data-live="image_url" src="{{ $mainImage }}" alt="About Bromo Ijen Expedition" class="w-full h-full object-cover">
+                    <img data-live="image_url" src="{{ $mainImage }}" alt="About Bromo Ijen Expedition" loading="lazy" class="w-full h-full object-cover">
                     
                     {{-- Play Button Overlay --}}
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -73,7 +73,7 @@
 
                 {{-- Secondary Image --}}
                 <div class="absolute -bottom-6 -right-2 md:right-8 lg:right-16 w-[45%] aspect-square bg-white p-2 rounded-tl-[30px] rounded-br-[30px] shadow-lg z-20 hidden md:block border border-slate-100">
-                     <img data-live="secondary_image_url" src="{{ $secondaryImage }}" alt="East Java Adventure Tours" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
+                     <img data-live="secondary_image_url" src="{{ $secondaryImage }}" alt="East Java Adventure Tours" loading="lazy" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
                 </div>
 
                 {{-- Decorative Green Bar --}}
@@ -130,7 +130,7 @@
                         <img src="https://ui-avatars.com/api/?name={{ urlencode($founderName) }}&background=random" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
                         <div class="text-left">
                             <h5 data-live="founder_name" class="font-bold text-brand-dark text-sm">{{ $founderName }}</h5>
-                            <p data-live="founder_role" class="text-[10px] text-slate-400">{{ $founderRole }}</p>
+                            <p data-live="founder_role" class="text-[11px] text-slate-400">{{ $founderRole }}</p>
                         </div>
                     </div>
                     @endif

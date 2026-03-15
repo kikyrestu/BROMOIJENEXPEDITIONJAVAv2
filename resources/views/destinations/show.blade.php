@@ -39,7 +39,7 @@
     @endpush
 
     {{-- Hero Section --}}
-    <section class="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+    <section class="relative h-[45vh] min-h-[300px] md:h-[60vh] md:min-h-[400px] flex items-center justify-center overflow-hidden">
         {{-- Background Image --}}
         @php
             $heroImage = $destination->thumbnail_path;
@@ -82,7 +82,7 @@
                 <p class="text-slate-600 mt-3 max-w-xl mx-auto">Choose from our carefully curated tour packages to experience the best of {{ $destination->name }}.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
                 @foreach($destination->packages as $package)
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
                     
@@ -96,12 +96,12 @@
                                 $thumb = 'https://placehold.co/800x600?text='.urlencode($package->name);
                             }
                         @endphp
-                        <img src="{{ $thumb }}" alt="{{ $package->name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="{{ $thumb }}" alt="{{ $package->name }}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         
                         {{-- Badges --}}
                         @if($package->is_featured)
                         <div class="absolute top-2 left-2 flex flex-col gap-1">
-                            <span class="bg-brand-primary text-white text-[9px] font-bold px-2 py-0.5 rounded">Featured</span>
+                            <span class="bg-brand-primary text-white text-[11px] font-bold px-2 py-0.5 rounded">Featured</span>
                         </div>
                         @endif
 
@@ -200,7 +200,7 @@
                 <p class="text-slate-600 mt-3 max-w-xl mx-auto">Read our travel guides and tips for your adventure to {{ $destination->name }}.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
                 @foreach($blogs as $blog)
                 <a href="{{ route('blogs.show', $blog->slug) }}" class="group block">
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
@@ -214,7 +214,7 @@
                                     $blogThumb = 'https://placehold.co/800x450?text=Blog';
                                 }
                             @endphp
-                            <img src="{{ $blogThumb }}" alt="{{ $blog->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ $blogThumb }}" alt="{{ $blog->title }}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         </div>
                         
                         {{-- Content --}}

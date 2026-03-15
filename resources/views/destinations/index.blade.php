@@ -7,7 +7,7 @@
 
 <x-app-layout :seo="$seo">
     {{-- Hero Section --}}
-    <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <div class="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 bg-brand-dark">
             <img src="https://placehold.co/1920x600?text=Explore+Destinations" class="w-full h-full object-cover opacity-40">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
@@ -31,14 +31,14 @@
         <div class="container mx-auto px-6 md:px-12 lg:px-20">
             
             @if($destinations->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 mb-12">
                     @foreach($destinations as $destination)
                         <div class="group flex flex-col h-full bg-white rounded-3xl overflow-hidden shadow-[0_2px_20px_rgba(0,0,0,0.05)] border border-slate-100 hover:shadow-xl transition-all duration-300">
                             {{-- Image --}}
                             <div class="relative aspect-[4/3] overflow-hidden">
                                 <a href="{{ route('destinations.show', $destination->slug) }}">
                                     <img src="{{ Storage::url($destination->image_path) }}" 
-                                         alt="{{ $destination->name }}"
+                                         alt="{{ $destination->name }}" loading="lazy"
                                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 </a>
                                 

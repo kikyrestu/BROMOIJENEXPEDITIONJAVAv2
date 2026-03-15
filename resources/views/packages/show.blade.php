@@ -64,7 +64,7 @@
     </script>
     @endpush
 
-    <div class="pt-32 pb-16 container mx-auto px-6 md:px-12 lg:px-20 font-sans text-slate-600">
+    <div class="pt-24 pb-12 md:pt-32 md:pb-16 container mx-auto px-4 md:px-12 lg:px-20 font-sans text-slate-600">
         
         {{-- TOP HEADER: Title & Share --}}
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
@@ -196,7 +196,7 @@
                         <div class="hidden md:flex flex-col gap-4 h-full">
                             @foreach($sideImages as $index => $img)
                                 <div class="flex-1 relative overflow-hidden group" @click="openLightbox({{ $index + 1 }})">
-                                    <img src="{{ asset('storage/'.$img) }}" 
+                                    <img src="{{ asset('storage/'.$img) }}" loading="lazy"
                                          class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 cursor-pointer">
                                     
                                     {{-- Jika ini gambar kedua dan masih ada lagi sisa gallery, tampilkan overlay +N --}}
@@ -306,7 +306,7 @@
                 {{-- Tour Amenities (Included / Excluded) --}}
                 <section>
                     <h2 class="text-2xl font-extrabold text-brand-dark mb-4">Tour Amenities</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-b border-slate-100 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 border-t border-b border-slate-100 py-6">
                         {{-- Included --}}
                         <div class="space-y-3">
                             <h3 class="text-sm font-bold text-green-600 uppercase tracking-wide mb-3">✓ Included</h3>
@@ -369,7 +369,7 @@
                     <div class="grid grid-cols-2 gap-6">
                         @foreach($amenityImages as $img)
                             <div class="h-48 md:h-64 rounded-2xl overflow-hidden shadow-sm">
-                                <img src="{{ asset('storage/'.$img) }}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                <img src="{{ asset('storage/'.$img) }}" loading="lazy" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
                             </div>
                         @endforeach
                     </div>
@@ -577,7 +577,7 @@
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform">
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <span class="text-[10px] font-bold text-brand-primary uppercase tracking-wider block mb-0.5">
+                                    <span class="text-[11px] font-bold text-brand-primary uppercase tracking-wider block mb-0.5">
                                         {{ $blogPost->category->name ?? 'News' }}
                                     </span>
                                     <h4 class="text-sm font-bold text-slate-700 leading-snug group-hover:text-brand-primary transition-colors line-clamp-2">
@@ -625,7 +625,7 @@
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute top-2 left-2 flex flex-col gap-1">
                             @if($relPkg->is_exclusive)
-                                <span class="bg-brand-accent text-white text-[9px] font-bold px-2 py-0.5 rounded">Exclusive</span>
+                                <span class="bg-brand-accent text-white text-[11px] font-bold px-2 py-0.5 rounded">Exclusive</span>
                             @endif
                         </div>
                         <div class="absolute bottom-2 left-2 bg-brand-accent text-white font-bold px-3 py-1 rounded text-xs shadow-md">

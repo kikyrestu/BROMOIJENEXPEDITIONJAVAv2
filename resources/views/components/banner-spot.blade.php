@@ -32,8 +32,8 @@
                 @if($banner->type === 'image')
                     <a href="{{ $banner->cta_url ?? '#' }}" class="block relative aspect-[4/1] md:aspect-[5/1] w-full overflow-hidden bg-gray-100">
                         @if($banner->image_path)
-                            <img src="{{ \Illuminate\Support\Facades\Storage::url($banner->image_path) }}" 
-                                 alt="{{ $banner->name }}" 
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($banner->image_path) }}"
+                                 alt="{{ $banner->name }}" loading="lazy"
                                  class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
                         @endif
 
