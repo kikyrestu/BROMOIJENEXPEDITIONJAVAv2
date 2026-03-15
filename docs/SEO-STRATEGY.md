@@ -1,6 +1,7 @@
 # SEO Strategy — Bromo Ijen Expedition Java
 
 > **Audit Date:** 14 Maret 2026  
+> **Last Updated:** 15 Maret 2026  
 > **Domain:** bromoijenexpeditionjava.com  
 > **Stack:** Laravel 11 + Filament v4 + Vite + Tailwind
 
@@ -13,17 +14,25 @@
 | Tipe | Jumlah | Detail |
 |------|--------|--------|
 | Pages | 1 | Home only |
-| Blogs | 2 | 1 published, 1 draft |
+| Blogs | 10 | 10 published (was: 1 published, 1 draft) |
 | Destinations | 4 | Bromo, Ijen, Bali, Tumpak Sewu |
 | Packages | 14 | 8 Bromo/Ijen variants, 4 Bali, 1 East Java, 1 Tumpak Sewu |
-| SEO Metadata | 18 | All records exist but **0 focus keywords** |
+| SEO Metadata | 26 | All records have focus keywords ✅ |
 
 ### 1.2 Existing Blog Posts
 
 | ID | Title | Status | Published |
 |----|-------|--------|-----------|
 | #6 | Standing on the Rim of Eternity: A Narrative Journey to Mount Bromo in 2026 | ✅ Published | 25 Feb 2026 |
-| #7 | The Ultimate Bromo Ijen Practical Guide 2026: Everything You Need to Know | ❌ Draft | 25 Feb 2026 |
+| #7 | The Ultimate Bromo Ijen Practical Guide 2026: Everything You Need to Know | ✅ Published | 25 Feb 2026 |
+| #8 | Ijen Crater Blue Fire: Complete Visitor Guide 2026 | ✅ Published | 14 Mar 2026 |
+| #9 | Mount Bromo Sunrise: The Ultimate Viewing Guide 2026 | ✅ Published | 14 Mar 2026 |
+| #10 | How to Get from Bali to Mount Bromo: Complete Transport Guide 2026 | ✅ Published | 15 Mar 2026 |
+| #11 | Tumpak Sewu Waterfall: Complete Visitor Guide to Indonesia's Most Spectacular Waterfall | ✅ Published | 15 Mar 2026 |
+| #12 | The Perfect 3-Day Bromo Ijen Itinerary: Day-by-Day Guide 2026 | ✅ Published | 15 Mar 2026 |
+| #13 | Nusa Penida Island Guide: Best Beaches, Viewpoints & Snorkeling Spots 2026 | ✅ Published | 15 Mar 2026 |
+| #14 | Budget Solo Travel in East Java: Complete Guide with 7-Day Itinerary 2026 | ✅ Published | 15 Mar 2026 |
+| #15 | 10 Hidden Gems in East Java You Must Visit in 2026 | ✅ Published | 15 Mar 2026 |
 
 ### 1.3 Package Pages (14 URLs)
 
@@ -57,16 +66,16 @@
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Sitemap.xml | ✅ | 16 URLs (homepage + 14 packages + 1 blog) |
+| Sitemap.xml | ✅ | 36 URLs (dynamic route, was 16) |
 | Robots.txt | ✅ | Blocks /admin/ and /livewire/ |
-| Canonical URLs | ⚠️ | Some packages have Google search URLs as canonical (wrong!) |
-| Focus Keywords | ❌ | 0 of 18 SEO records have focus keywords |
-| Meta Titles | ✅ | All 18 records have titles |
-| Meta Descriptions | ⚠️ | Most have descriptions, some blog references missing |
+| Canonical URLs | ✅ | All fixed (12 were pointing to google.com/search) |
+| Focus Keywords | ✅ | All 26 SEO records have keywords |
+| Meta Titles | ✅ | All 26 records have titles |
+| Meta Descriptions | ✅ | All 26 records have descriptions |
 | WebP Images | ✅ | Enabled, 91% size savings |
 | Alt Text | ✅ | Fixed across all hero/about/blog images |
 | Structured Data | ❌ | No JSON-LD schema markup |
-| OG/Social Tags | ❓ | Need to verify |
+| OG/Social Tags | ✅ | Verified on all blog pages |
 
 ### 1.6 Critical Issues Found
 
@@ -466,19 +475,19 @@ Untuk setiap blog post baru, pastikan:
 - [x] Publish Blog #7 (draft → published)
 - [x] Update sitemap to include all pages (16 → 29 URLs, dynamic)
 
-### Phase 2 — Content Creation (Week 1-2)
-- [x] Article #1: Ijen Crater Blue Fire (Blog #8 — published, 2800+ words)
-- [ ] Article #2: Mount Bromo Sunrise
-- [ ] Article #3: Bali to Mount Bromo
+### Phase 2 — Content Creation ✅ DONE
+- [x] Article #1: Ijen Crater Blue Fire (Blog #8 — 2,800+ words, SEO #19)
+- [x] Article #2: Mount Bromo Sunrise (Blog #9 — 2,700+ words, SEO #20)
+- [x] Article #3: Bali to Mount Bromo (Blog #10 — 2,400+ words, SEO #21)
 
-### Phase 3 — Content Expansion (Week 3-4)
-- [ ] Article #4: Tumpak Sewu Waterfall
-- [ ] Article #5: 3-Day Bromo Ijen Itinerary
-- [ ] Article #6: Nusa Penida Guide
+### Phase 3 — Content Expansion ✅ DONE
+- [x] Article #4: Tumpak Sewu Waterfall (Blog #11 — 2,300+ words, SEO #22)
+- [x] Article #5: 3-Day Bromo Ijen Itinerary (Blog #12 — 2,800+ words, SEO #23)
+- [x] Article #6: Nusa Penida Guide (Blog #13 — 2,700+ words, SEO #24)
 
-### Phase 4 — Long-Tail Content (Week 5-6)
-- [ ] Article #7: Budget Solo Travel East Java
-- [ ] Article #8: 10 Hidden Gems East Java
+### Phase 4 — Long-Tail Content ✅ DONE
+- [x] Article #7: Budget Solo Travel East Java (Blog #14 — 2,600+ words, SEO #25)
+- [x] Article #8: 10 Hidden Gems East Java (Blog #15 — 2,500+ words, SEO #26)
 
 ### Phase 5 — Technical Enhancement
 - [ ] Add JSON-LD structured data
@@ -492,10 +501,10 @@ Untuk setiap blog post baru, pastikan:
 
 | Metric | Current | Target (3 months) | Target (6 months) |
 |--------|---------|--------------------|--------------------|
-| Indexed URLs | ~16 | 30+ | 40+ |
-| Blog Posts | 2 | 10 | 15+ |
+| Indexed URLs | 36 | 40+ | 50+ |
+| Blog Posts | 10 | 15 | 20+ |
 | Organic Traffic | ? | 500/month | 2,000/month |
-| Focus Keywords Set | 0/18 | 28/28 | All pages |
+| Focus Keywords Set | 26/26 ✅ | All pages | All pages |
 | Top 10 Rankings | 0 | 3-5 keywords | 10+ keywords |
 | Avg Page Speed | ? | <3s | <2s |
 
