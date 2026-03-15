@@ -170,31 +170,14 @@
         {!! $headerCode !!}
     @endif
 
-    {{-- Fonts --}}
+    {{-- Fonts (non-render-blocking with font-display: swap) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Just+Another+Hand&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Just+Another+Hand&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Just+Another+Hand&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
     {{-- Vite Build (CSS + JS bundled - MUCH faster than CDN) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    {{-- Livewire Upload Debug --}}
-    <script>
-        document.addEventListener('livewire:init', () => {
-            Livewire.hook('upload:start', (name, file) => {
-                console.log('🚀 Upload Started:', name);
-                console.log('File:', file);
-            });
-
-            Livewire.hook('upload:error', (name, error) => {
-                console.group('❌ Upload Error (401 Debug)');
-                console.error('File:', name);
-                console.error('Error Message:', error);
-                console.warn('Possibilities: Session Expired, Cookie Domain Mismatch, or File Size Limit detected as Auth Error.');
-                console.groupEnd();
-            });
-        });
-    </script>
 </head>
 <body class="font-sans antialiased text-brand-dark bg-white selection:bg-brand-accent selection:text-white overflow-x-hidden">
     

@@ -84,20 +84,18 @@ class ImageOptimizationService
     }
 
     /**
-     * Create an optimized version (max 1920px wide).
+     * Create an optimized version (max 1920px wide, max 1080px tall).
      */
     protected function createOptimized(string $sourcePath, string $destPath, string $disk): void
     {
         $image = $this->manager->read(file_get_contents($sourcePath));
 
-        // Scale down if wider than MAX_WIDTH, maintain aspect ratio
+        // Scale down if exceeds max dimensions, maintain aspect ratio
         $width = $image->width();
         $height = $image->height();
 
-        if ($width > self::MAX_WIDTH) {
-            $image->scaleDown(width: self::MAX_WIDTH);
-        } elseif ($height > self::MAX_HEIGHT) {
-            $image->scaleDown(height: self::MAX_HEIGHT);
+        if ($width > self::MAX_WIDTH || $height > self::MAX_HEIGHT) {
+            $image->scaleDown(width: self::MAX_WIDTH, height: self::MAX_HEIGHT);
         }
 
         $encoded = $this->encode($image, self::OPTIMIZED_QUALITY);
