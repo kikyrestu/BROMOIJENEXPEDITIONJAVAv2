@@ -11,23 +11,41 @@
 <x-app-layout :seo="$blogSeo">
 
     @push('structured-data')
+    {{-- BreadcrumbList --}}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Article",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ route('home') }}" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ route('blogs.index') }}" },
+            { "@type": "ListItem", "position": 3, "name": "{{ $blog->title }}" }
+        ]
+    }
+    </script>
+    {{-- BlogPosting --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
         "headline": "{{ $blog->title }}",
         "description": "{{ $blogSeo->meta_description }}",
         "url": "{{ url()->current() }}",
         @if($blog->thumbnail_path)"image": "{{ asset('storage/' . $blog->thumbnail_path) }}",@endif
-        "datePublished": "{{ $blog->created_at?->toIso8601String() }}",
+        "datePublished": "{{ $blog->published_at?->toIso8601String() ?? $blog->created_at?->toIso8601String() }}",
         "dateModified": "{{ $blog->updated_at?->toIso8601String() }}",
+        "wordCount": {{ str_word_count(strip_tags($blog->body ?? '')) }},
+        @if($blog->category)"articleSection": "{{ $blog->category->name }}",@endif
+        @if($blogSeo->meta_keywords)"keywords": "{{ $blogSeo->meta_keywords }}",@endif
         "author": {
             "@type": "Organization",
-            "name": "Bromo Ijen Expedition Java"
+            "name": "Bromo Ijen Expedition Java",
+            "url": "{{ url('/') }}"
         },
         "publisher": {
             "@type": "Organization",
-            "name": "Bromo Ijen Expedition Java"
+            "name": "Bromo Ijen Expedition Java",
+            "url": "{{ url('/') }}"
         },
         "mainEntityOfPage": {
             "@type": "WebPage",
@@ -35,6 +53,41 @@
         }
     }
     </script>
+    {{-- FAQPage (if article contains FAQ section) --}}
+    @php
+        $faqItems = [];
+        if (preg_match_all('/<h3>([^<]+)<\/h3>\s*<p>([^<]+(?:<[^>]+>[^<]*<\/[^>]+>)*[^<]*)<\/p>/s', $blog->body ?? '', $matches, PREG_SET_ORDER)) {
+            $inFaq = false;
+            foreach ($matches as $m) {
+                $question = trim(strip_tags($m[1]));
+                $answer = trim(strip_tags($m[2]));
+                if (str_contains($question, '?')) {
+                    $inFaq = true;
+                    $faqItems[] = ['q' => $question, 'a' => $answer];
+                }
+            }
+        }
+    @endphp
+    @if(count($faqItems) >= 2)
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            @foreach($faqItems as $faq)
+            {
+                "@type": "Question",
+                "name": "{{ addslashes($faq['q']) }}",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "{{ addslashes($faq['a']) }}"
+                }
+            }@if(!$loop->last),@endif
+            @endforeach
+        ]
+    }
+    </script>
+    @endif
     @endpush
 
     {{-- Hero Image --}}
@@ -131,9 +184,9 @@
                         @if($moreBlogs->count())
                         <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 mt-8">
                             <h3 class="text-xl font-bold text-brand-dark mb-6">Related Articles</h3>
-                            <div class="flex flex-col gap-5">
+                            <div class="flex flex-col divide-y divide-slate-200">
                                 @foreach($moreBlogs as $moreBlog)
-                                    <a href="{{ route('blogs.show', $moreBlog->slug) }}" class="group flex gap-4 items-start">
+                                    <a href="{{ route('blogs.show', $moreBlog->slug) }}" class="group flex gap-4 items-start py-4 first:pt-0 last:pb-0">
                                         <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0">
                                             <img src="{{ $moreBlog->thumbnail_path ? asset('storage/' . $moreBlog->thumbnail_path) : 'https://placehold.co/150x150?text=' . urlencode(Str::limit($moreBlog->title, 10)) }}"
                                                  alt="{{ $moreBlog->title }}" loading="lazy"

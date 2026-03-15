@@ -11,10 +11,23 @@
 <x-app-layout :seo="$pkgSeo">
 
     @push('structured-data')
+    {{-- BreadcrumbList --}}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "TouristTrip",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ route('home') }}" },
+            { "@type": "ListItem", "position": 2, "name": "Packages", "item": "{{ route('packages.index') }}" },
+            { "@type": "ListItem", "position": 3, "name": "{{ $package->name }}" }
+        ]
+    }
+    </script>
+    {{-- TouristTrip + Product --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": ["TouristTrip", "Product"],
         "name": "{{ $package->name }}",
         "description": "{{ $pkgSeo->meta_description }}",
         "url": "{{ url()->current() }}",
@@ -22,20 +35,23 @@
         "touristType": "Adventure",
         "provider": {
             "@type": "TravelAgency",
-            "name": "Bromo Ijen Expedition Java"
+            "name": "Bromo Ijen Expedition Java",
+            "url": "{{ url('/') }}"
         },
         @if($package->price_start_from)
         "offers": {
             "@type": "Offer",
             "priceCurrency": "IDR",
             "price": "{{ $package->price_start_from }}",
-            "availability": "https://schema.org/InStock"
+            "availability": "https://schema.org/InStock",
+            "validFrom": "{{ now()->toIso8601String() }}"
         },
         @endif
         @if($package->rating)
         "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "{{ $package->rating }}",
+            "bestRating": "5",
             "reviewCount": "{{ $package->review_count ?? 1 }}"
         },
         @endif

@@ -7,6 +7,37 @@
     if (!$destSeo->meta_description) $destSeo->meta_description = 'Explore ' . $destination->name . ' with our professional guided tours.';
 @endphp
 <x-app-layout :seo="$destSeo">
+    @push('structured-data')
+    {{-- BreadcrumbList --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ route('home') }}" },
+            { "@type": "ListItem", "position": 2, "name": "Destinations", "item": "{{ route('destinations.index') }}" },
+            { "@type": "ListItem", "position": 3, "name": "{{ $destination->name }}" }
+        ]
+    }
+    </script>
+    {{-- TouristDestination --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TouristDestination",
+        "name": "{{ $destination->name }}",
+        "description": "{{ $destSeo->meta_description }}",
+        "url": "{{ url()->current() }}",
+        @if($destination->thumbnail_path)"image": "{{ asset('storage/' . $destination->thumbnail_path) }}",@endif
+        "touristType": ["Adventure tourism", "Eco tourism", "Nature tourism"],
+        "containedInPlace": {
+            "@type": "Country",
+            "name": "Indonesia"
+        }
+    }
+    </script>
+    @endpush
+
     {{-- Hero Section --}}
     <section class="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         {{-- Background Image --}}

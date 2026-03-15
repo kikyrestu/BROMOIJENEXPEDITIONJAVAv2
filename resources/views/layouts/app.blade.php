@@ -124,30 +124,24 @@
     }
     </script>
 
-    {{-- JSON-LD: BreadcrumbList --}}
-    @if(!request()->routeIs('home'))
+    {{-- JSON-LD: WebSite (homepage only) --}}
+    @if(request()->routeIs('home'))
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "{{ route('home') }}"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "{{ $seoTitle }}",
-                "item": "{{ url()->current() }}"
-            }
-        ]
+        "@type": "WebSite",
+        "name": "{{ $siteName }}",
+        "url": "{{ $settings['site_url'] ?? url('/') }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ url('/blogs') }}?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
     }
     </script>
     @endif
 
+    {{-- Page-specific structured data (breadcrumbs, schemas) pushed from views --}}
     @stack('structured-data')
 
     @if(!empty($favicon))
