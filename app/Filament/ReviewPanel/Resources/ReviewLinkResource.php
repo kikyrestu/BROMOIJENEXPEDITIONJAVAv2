@@ -92,12 +92,16 @@ class ReviewLinkResource extends Resource
                     ->label('Copy Link')
                     ->icon('heroicon-o-clipboard-document')
                     ->color('primary')
-                    ->action(function ($record) {
+                    ->action(function ($record, $livewire) {
+                        $url = $record->review_url;
+                        $safeUrl = \Illuminate\Support\Js::from($url);
+
+                        $livewire->js("navigator.clipboard.writeText({$safeUrl})");
+
                         Notification::make()
                             ->title('Link Copied!')
-                            ->body($record->review_url)
+                            ->body($url)
                             ->success()
-                            ->persistent()
                             ->send();
                     }),
                 DeleteAction::make(),

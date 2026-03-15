@@ -20,15 +20,18 @@ class ListTestimonials extends ListRecords
                 ->label('Share Review Link')
                 ->icon('heroicon-o-link')
                 ->color(Color::Emerald)
-                ->action(function () {
+                ->action(function ($livewire) {
                     $token = ReviewToken::generate(
                         createdBy: auth()->id(),
                         label: 'Generated from Admin',
                     );
 
+                    $safeUrl = \Illuminate\Support\Js::from($token->review_url);
+                    $livewire->js("navigator.clipboard.writeText({$safeUrl})");
+
                     \Filament\Notifications\Notification::make()
-                        ->title('Review Link Generated (Single-Use)')
-                        ->body("Copy this link and send it to your client (valid for 30 days):\n\n**{$token->review_url}**")
+                        ->title('Review Link Generated & Copied!')
+                        ->body("Link copied to clipboard (valid for 30 days):\n\n**{$token->review_url}**")
                         ->success()
                         ->persistent()
                         ->send();
