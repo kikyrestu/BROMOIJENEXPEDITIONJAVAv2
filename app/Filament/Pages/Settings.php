@@ -318,6 +318,11 @@ class Settings extends Page implements HasForms
                 );
             }
 
+            // Auto-regenerate static favicons when favicon is updated
+            if (!empty($data['favicon'])) {
+                $this->regenerateFavicons($data['favicon']);
+            }
+
             Notification::make() 
                 ->success()
                 ->title(__('Saved successfully'))
@@ -326,5 +331,57 @@ class Settings extends Page implements HasForms
         } catch (Halt $exception) {
             return;
         }
+    }
+
+    /**
+     * Generate static square favicon PNGs from the uploaded favicon image.
+     * Google requires square favicons, minimum 48x48, multiples of 48.
+     */
+    protected function regenerateFavicons(string $faviconPath): void
+    {
+        $storagePath = storage_path('app/public/' . $faviconPath);
+        if (!file_exists($storagePath)) {
+            return;
+        }
+
+        $info = @getimagesize($storagePath);
+        if (!$info) {
+            return;
+        }
+
+        $src = match ($info['mime']) {
+            'image/png' => @imagecreatefrompng($storagePath),
+            'image/jpeg' => @imagecreatefromjpeg($storagePath),
+            'image/webp' => @imagecreatefromwebp($storagePath),
+            'image/gif' => @imagecreatefromgif($storagePath),
+            default => null,
+        };
+
+        if (!$src) {
+            return;
+        }
+
+        $w = imagesx($src);
+        $h = imagesy($src);
+
+        // Center-crop to square
+        $squareSize = min($w, $h);
+        $offsetX = (int)(($w - $squareSize) / 2);
+        $offsetY = (int)(($h - $squareSize) / 2);
+
+        $sizes = [48, 192];
+        foreach ($sizes as $size) {
+            $dst = imagecreatetruecolor($size, $size);
+            imagealphablending($dst, false);
+            imagesavealpha($dst, true);
+            imagecopyresampled($dst, $src, 0, 0, $offsetX, $offsetY, $size, $size, $squareSize, $squareSize);
+            imagepng($dst, public_path("favicon-{$size}.png"), 9);
+            imagedestroy($dst);
+        }
+
+        // Copy 48px as favicon.ico fallback
+        @copy(public_path('favicon-48.png'), public_path('favicon.ico'));
+
+        imagedestroy($src);
     }
 }

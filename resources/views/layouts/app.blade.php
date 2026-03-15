@@ -152,11 +152,10 @@
     {{-- Page-specific structured data (breadcrumbs, schemas) pushed from views --}}
     @stack('structured-data')
 
-    @if(!empty($favicon))
-        @php $favUrl = \Illuminate\Support\Facades\Storage::url($favicon); @endphp
-        <link rel="icon" href="{{ $favUrl }}?v={{ md5($favicon) }}">
-        <link rel="apple-touch-icon" href="{{ $favUrl }}?v={{ md5($favicon) }}">
-    @endif
+    {{-- Favicons (static square PNGs for Google Search compatibility) --}}
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
 
     {{-- Verification Tags --}}
     @if($googleVerify)
