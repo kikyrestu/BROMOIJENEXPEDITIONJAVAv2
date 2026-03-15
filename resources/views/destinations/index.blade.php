@@ -1,7 +1,7 @@
 <?php
     $seo = new \App\Models\SeoMetadata([
-        'meta_title' => 'Our Destinations',
-        'meta_description' => 'Explore the majestic destinations we offer, including Mount Bromo, Ijen Crater, and Tumpak Sewu Waterfall.',
+        'meta_title' => 'Destinations — East Java & Bali',
+        'meta_description' => 'Explore Mount Bromo, Ijen Crater, Tumpak Sewu Waterfall & Bali with local expert guides. Stunning volcanoes, waterfalls & beaches — plan your adventure now.',
     ]);
 ?>
 

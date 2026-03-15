@@ -1,7 +1,7 @@
 <?php
     $seo = new \App\Models\SeoMetadata([
         'meta_title' => $category->name . ' Tour Packages',
-        'meta_description' => $category->description ?? 'Browse our ' . $category->name . ' tour packages for Bromo, Ijen, and East Java.',
+        'meta_description' => $category->description ?? 'Browse affordable ' . $category->name . ' tour packages with private transport & English-speaking guides. Free pickup from hotels in East Java & Bali.',
     ]);
 ?>
 

@@ -173,10 +173,13 @@ Route::get('/sitemap.xml', function () {
     });
     
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
     foreach ($urls as $url) {
+        $loc = htmlspecialchars($url['loc'], ENT_XML1);
         $xml .= '<url>';
-        $xml .= '<loc>' . htmlspecialchars($url['loc'], ENT_XML1) . '</loc>';
+        $xml .= '<loc>' . $loc . '</loc>';
+        $xml .= '<xhtml:link rel="alternate" hreflang="en" href="' . $loc . '"/>';
+        $xml .= '<xhtml:link rel="alternate" hreflang="x-default" href="' . $loc . '"/>';
         if (!empty($url['lastmod'])) $xml .= '<lastmod>' . $url['lastmod'] . '</lastmod>';
         $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
         $xml .= '<priority>' . $url['priority'] . '</priority>';

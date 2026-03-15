@@ -28,6 +28,7 @@
         "name": "{{ $destination->name }}",
         "description": "{{ $destSeo->meta_description }}",
         "url": "{{ url()->current() }}",
+        "inLanguage": "en",
         @if($destination->thumbnail_path)"image": "{{ asset('storage/' . $destination->thumbnail_path) }}",@endif
         "touristType": ["Adventure tourism", "Eco tourism", "Nature tourism"],
         "containedInPlace": {

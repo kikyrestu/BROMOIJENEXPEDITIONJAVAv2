@@ -31,6 +31,7 @@
         "name": "{{ $package->name }}",
         "description": "{{ $pkgSeo->meta_description }}",
         "url": "{{ url()->current() }}",
+        "inLanguage": "en",
         @if($package->thumbnail)"image": "{{ asset('storage/' . $package->thumbnail) }}",@endif
         "touristType": "Adventure",
         "provider": {
@@ -39,13 +40,22 @@
             "url": "{{ url('/') }}"
         },
         @if($package->price_start_from)
-        "offers": {
-            "@type": "Offer",
-            "priceCurrency": "IDR",
-            "price": "{{ $package->price_start_from }}",
-            "availability": "https://schema.org/InStock",
-            "validFrom": "{{ now()->toIso8601String() }}"
-        },
+        "offers": [
+            {
+                "@type": "Offer",
+                "priceCurrency": "USD",
+                "price": "{{ round($package->price_start_from / 16000) }}",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            },
+            {
+                "@type": "Offer",
+                "priceCurrency": "IDR",
+                "price": "{{ $package->price_start_from }}",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            }
+        ],
         @endif
         @if($package->rating)
         "aggregateRating": {

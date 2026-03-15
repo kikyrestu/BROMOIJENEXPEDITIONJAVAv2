@@ -31,6 +31,7 @@
         "headline": "{{ $blog->title }}",
         "description": "{{ $blogSeo->meta_description }}",
         "url": "{{ url()->current() }}",
+        "inLanguage": "en",
         @if($blog->thumbnail_path)"image": "{{ asset('storage/' . $blog->thumbnail_path) }}",@endif
         "datePublished": "{{ $blog->published_at?->toIso8601String() ?? $blog->created_at?->toIso8601String() }}",
         "dateModified": "{{ $blog->updated_at?->toIso8601String() }}",

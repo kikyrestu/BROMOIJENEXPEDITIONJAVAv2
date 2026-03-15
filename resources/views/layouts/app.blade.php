@@ -50,7 +50,7 @@
     {{-- SEO Metadata --}}
     @php
         $seoTitle = $siteName;
-        $seoDesc = $settings['default_meta_description'] ?? 'Professional tour packages for Mount Bromo, Ijen Crater & Tumpak Sewu in East Java, Indonesia.';
+        $seoDesc = $settings['default_meta_description'] ?? 'Book private tours to Mount Bromo, Ijen Crater & Tumpak Sewu from $50/person. Trusted by 500+ travelers. Free hotel pickup in East Java & Bali.';
         $seoKeywords = '';
         $seoImage = !empty($defaultOg) ? \Illuminate\Support\Facades\Storage::url($defaultOg) : '';
         $seoCanonical = url()->current();
@@ -75,8 +75,13 @@
     @if($seoKeywords)<meta name="keywords" content="{{ $seoKeywords }}">@endif
     <link rel="canonical" href="{{ $seoCanonical }}">
 
+    {{-- International SEO: hreflang --}}
+    <link rel="alternate" hreflang="en" href="{{ $seoCanonical }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $seoCanonical }}">
+
     {{-- Open Graph --}}
     <meta property="og:type" content="{{ $seoOgType }}">
+    <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:title" content="{{ $seoTitle }}">
     <meta property="og:description" content="{{ $seoDesc }}">
@@ -96,6 +101,8 @@
         "@type": "TravelAgency",
         "name": "{{ $siteName }}",
         "url": "{{ $settings['site_url'] ?? url('/') }}",
+        "inLanguage": "en",
+        "availableLanguage": ["English", "Indonesian"],
         @if(!empty($logo))"logo": "{{ \Illuminate\Support\Facades\Storage::url($logo) }}",@endif
         @if(!empty($settings['provider_phone']))"telephone": "+{{ $settings['provider_phone'] }}",@endif
         @if(!empty($settings['provider_email']))"email": "{{ $settings['provider_email'] }}",@endif
@@ -132,6 +139,7 @@
         "@type": "WebSite",
         "name": "{{ $siteName }}",
         "url": "{{ $settings['site_url'] ?? url('/') }}",
+        "inLanguage": "en",
         "potentialAction": {
             "@type": "SearchAction",
             "target": "{{ url('/blogs') }}?q={search_term_string}",

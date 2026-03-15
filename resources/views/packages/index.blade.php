@@ -1,7 +1,7 @@
 <?php
     $seo = new \App\Models\SeoMetadata([
-        'meta_title' => 'Our Packages',
-        'meta_description' => 'Browse our exclusive tour packages for Bromo, Ijen, and Tumpak Sewu.',
+        'meta_title' => 'Tour Packages — Bromo, Ijen & Bali',
+        'meta_description' => 'Compare 15+ private tour packages from $50/person. Bromo sunrise, Ijen blue fire, Tumpak Sewu & Bali tours with free hotel pickup. Book today!',
     ]);
 ?>
 

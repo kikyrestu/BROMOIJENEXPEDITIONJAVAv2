@@ -17,6 +17,7 @@
     "@type": "TouristTrip",
     "name": "Bromo Ijen Expedition Java Tours",
     "description": "Premium tour packages to Mount Bromo, Ijen Crater, Tumpak Sewu and Bali from Bromo Ijen Expedition Java.",
+    "inLanguage": "en",
     "provider": {
         "@type": "TourOperator",
         "name": "Bromo Ijen Expedition Java",
