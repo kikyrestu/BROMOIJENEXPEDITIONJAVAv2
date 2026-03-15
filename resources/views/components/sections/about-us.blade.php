@@ -3,7 +3,7 @@
 @php
     $badge = $data['badge'] ?? 'About BromoIjen';
     $title = $data['title'] ?? 'Experience The <span class="text-brand-primary">New Adventure</span> With Us';
-    $description = $data['description'] ?? 'We organize premium trips to Mount Bromo, Ijen Crater, and other exotic destinations in East Java. Our goal is to provide safe, comfortable, and memorable experiences for every traveler.';
+    $description = $data['description'] ?? 'We organize private guided trips to Mount Bromo, Ijen Crater, and other exotic destinations in East Java. Our goal is to provide safe, comfortable, and memorable experiences for every traveler.';
     
     // Images
     // Images - Logic moved to home.blade.php to avoid double wrapping

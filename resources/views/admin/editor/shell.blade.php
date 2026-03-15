@@ -938,7 +938,7 @@
                         if (block.type === 'about_us') {
                             if (typeof block.data.badge === 'undefined') block.data.badge = 'About BromoIjen';
                             if (typeof block.data.title === 'undefined') block.data.title = 'Experience The <span class="text-brand-primary">New Adventure</span> With Us';
-                            if (typeof block.data.description === 'undefined') block.data.description = 'We organize premium trips to Mount Bromo, Ijen Crater, and other exotic destinations in East Java. Our goal is to provide safe, comfortable, and memorable experiences for every traveler.';
+                            if (typeof block.data.description === 'undefined') block.data.description = 'We organize private guided trips to Mount Bromo, Ijen Crater, and other exotic destinations in East Java. Our goal is to provide safe, comfortable, and memorable experiences for every traveler.';
                             
                             // Features Defaults
                             if (typeof block.data.feature_1_title === 'undefined') block.data.feature_1_title = 'Trusted Travel Guide';

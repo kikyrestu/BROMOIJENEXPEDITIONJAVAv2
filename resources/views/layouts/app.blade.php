@@ -11,7 +11,7 @@
         $siteName = $settings['site_name'] ?? config('app.name', 'Bromo Ijen Expedition');
         $favicon = $settings['favicon'] ?? null;
         $logo = $settings['site_logo'] ?? null;
-        $providerName = $settings['provider_name'] ?? 'Premium Expeditions';
+        $providerName = $settings['provider_name'] ?? 'Bromo Ijen Expedition';
         $memberSince = $settings['member_since'] ?? date('Y');
         // Verification & Scripts
         $googleVerify = $settings['google_verification_code'] ?? null;
@@ -376,7 +376,7 @@
                         @endif
                     </div>
                     <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                        Experience the majestic beauty of East Java with our premium expedition services. Trusted by thousands of adventurers since {{ $memberSince }}.
+                        Experience the majestic beauty of East Java with our expert-guided expedition services. Trusted by hundreds of adventurers since {{ $memberSince }}.
                     </p>
                     {{-- Social Icons --}}
                     @if(count($footerSocials) > 0)

@@ -166,7 +166,7 @@
                             <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors"></div>
                             <div class="absolute inset-x-0 bottom-0 p-8 text-center">
                                 <h3 class="text-2xl font-extrabold text-white mb-2">Ready to explore?</h3>
-                                <p class="text-white/80 text-sm mb-6">Book your premium trip to Bromo today.</p>
+                                <p class="text-white/80 text-sm mb-6">Book your private guided trip to Bromo today.</p>
                                  <a href="{{ route('packages.index') }}" class="inline-block w-full py-3 bg-brand-primary text-white font-bold rounded-full hover:bg-white hover:text-brand-primary transition-all">
                                     View Packages
                                 </a>

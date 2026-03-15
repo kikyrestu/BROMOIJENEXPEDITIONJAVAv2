@@ -14,7 +14,7 @@
                     @case('hero_video')
                          <x-blocks.hero_video :data="array_merge([
                             'heading' => $page->title ?? 'EXPLORE EAST JAVA',
-                            'subheading' => 'Experience the majestic sunrise of Bromo and the blue fire of Ijen Crater with our premium expedition service.', 
+                            'subheading' => 'Experience the majestic sunrise of Bromo and the blue fire of Ijen Crater with our expert-guided expedition service.', 
                             'button_text' => 'Start Adventure',
                             'button_url' => '#packages',
                             'backgrounds' => [

@@ -18,7 +18,7 @@
                 Explore East Java
             </span>
             <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
-                Premium <span class="text-brand-primary font-hand italic">Tour Packages</span>
+                Explore <span class="text-brand-primary font-hand italic">Tour Packages</span>
             </h1>
             <p class="text-slate-300 text-lg max-w-2xl mx-auto">
                 Choose from our carefully curated itineraries designed for unforgettable experiences.

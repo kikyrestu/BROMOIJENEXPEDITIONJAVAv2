@@ -26,7 +26,7 @@
                 'name' => 'Michael Chen',
                 'role' => 'Singapore',
                 'avatar' => 'https://ui-avatars.com/api/?name=Michael+Chen&background=random',
-                'content' => 'Ijen Blue Fire was a challenging hike but totally worth it. The guide ensured our safety throughout the trek. A premium experience.',
+                'content' => 'Ijen Blue Fire was a challenging hike but totally worth it. The guide ensured our safety throughout the trek. An unforgettable experience.',
                 'rating' => 5
             ],
             [
