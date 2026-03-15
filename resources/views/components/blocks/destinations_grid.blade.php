@@ -43,7 +43,13 @@
                         
                         {{-- Image --}}
                         <div class="h-full w-full">
-                            <img src="{{ $destination->thumbnail_path ? Storage::disk('public')->url($destination->thumbnail_path) : 'https://placehold.co/600x800?text='.urlencode($destination->name) }}" 
+                            @php
+                                $dThumb = $destination->thumbnail_path;
+                                $dMedium = (!empty($dThumb) && !str_starts_with($dThumb, 'http')) ? \App\Services\ImageOptimizationService::getMediumUrl($dThumb) : null;
+                                $dSrc = $dThumb ? Storage::disk('public')->url($dThumb) : 'https://placehold.co/600x800?text='.urlencode($destination->name);
+                            @endphp
+                            <img src="{{ $dMedium ?? $dSrc }}" 
+                                 @if($dMedium) srcset="{{ $dMedium }} 600w, {{ $dSrc }} 1080w" sizes="(max-width: 768px) 50vw, 33vw" @endif
                                  loading="lazy" 
                                  alt="{{ $destination->name }}" 
                                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">

@@ -54,13 +54,16 @@
                         <div class="h-full w-full">
                              @php
                                 $thumb = $destination->thumbnail_path;
+                                $mediumUrl = null;
                                 if (!empty($thumb) && !str_starts_with($thumb, 'http')) {
+                                    $mediumUrl = \App\Services\ImageOptimizationService::getMediumUrl($thumb);
                                     $thumb = \Illuminate\Support\Facades\Storage::url($thumb);
                                 } elseif (empty($thumb)) {
                                     $thumb = 'https://placehold.co/600x800?text=' . urlencode($destination->name);
                                 }
                             @endphp
-                            <img src="{{ $thumb }}" 
+                            <img src="{{ $mediumUrl ?? $thumb }}" 
+                                 @if($mediumUrl) srcset="{{ $mediumUrl }} 600w, {{ $thumb }} 1080w" sizes="(max-width: 768px) 50vw, 33vw" @endif
                                  alt="{{ $destination->name }}" loading="lazy"
                                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
                         </div>

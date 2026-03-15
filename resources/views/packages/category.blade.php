@@ -58,7 +58,9 @@
                             {{-- Image --}}
                             <div class="relative aspect-[4/3] overflow-hidden">
                                 <a href="{{ route('packages.show', $package->slug) }}">
-                                    <img src="{{ Storage::url($package->thumbnail ?? $package->destination->image_path) }}" 
+                                    @php $catThumb = $package->thumbnail ?? $package->destination->image_path; $catMed = \App\Services\ImageOptimizationService::getMediumUrl($catThumb); @endphp
+                                    <img src="{{ $catMed ?? Storage::url($catThumb) }}" 
+                                         @if($catMed) srcset="{{ $catMed }} 600w, {{ Storage::url($catThumb) }} 1080w" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" @endif
                                          alt="{{ $package->name }}" loading="lazy"
                                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 </a>

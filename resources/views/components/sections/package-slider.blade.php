@@ -83,14 +83,14 @@
             <button type="button"
                 @click="filterCategory('all')"
                 :class="activeCategory === 'all' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
+                class="px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300 cursor-pointer">
                 All
             </button>
             @foreach($packageCategories as $filter)
                 <button type="button"
                     @click="filterCategory('{{ $filter->name }}')"
                     :class="activeCategory === '{{ $filter->name }}' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                    class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
+                    class="px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300 cursor-pointer">
                     {{ $filter->name }}
                 </button>
             @endforeach
@@ -113,13 +113,16 @@
                             <div class="relative rounded-xl overflow-hidden aspect-[16/9] group-hover:opacity-95 transition-opacity">
                                 @php
                                     $thumb = $package->thumbnail;
+                                    $pMedium = null;
                                     if(!empty($thumb) && !str_starts_with($thumb, 'http')) {
+                                        $pMedium = \App\Services\ImageOptimizationService::getMediumUrl($thumb);
                                         $thumb = \Illuminate\Support\Facades\Storage::url($thumb);
                                     } elseif(empty($thumb)) {
                                         $thumb = 'https://placehold.co/800x600?text='.urlencode($package->name);
                                     }
                                 @endphp
-                                <img src="{{ $thumb }}" 
+                                <img src="{{ $pMedium ?? $thumb }}" 
+                                     @if($pMedium) srcset="{{ $pMedium }} 600w, {{ $thumb }} 1080w" sizes="(max-width: 768px) 90vw, 380px" @endif
                                      alt="{{ $package->name }}" 
                                      loading="lazy"
                                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -268,21 +271,25 @@
         return true;
     }
 
-    // Try immediately
-    if (initSectionSwiper()) return;
-
-    // Retry on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', function() {
+    // Try after a frame to avoid forced reflow during initial layout
+    requestAnimationFrame(function() {
         if (initSectionSwiper()) return;
 
-        // Poll for Vite module script
-        var attempts = 0;
-        var poll = setInterval(function() {
-            attempts++;
-            if (initSectionSwiper() || attempts > 100) {
-                clearInterval(poll);
-            }
-        }, 50);
+        // Retry on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            requestAnimationFrame(function() {
+                if (initSectionSwiper()) return;
+
+                // Poll for Vite module script
+                var attempts = 0;
+                var poll = setInterval(function() {
+                    attempts++;
+                    if (initSectionSwiper() || attempts > 100) {
+                        clearInterval(poll);
+                    }
+                }, 50);
+            });
+        });
     });
 })();
 </script>

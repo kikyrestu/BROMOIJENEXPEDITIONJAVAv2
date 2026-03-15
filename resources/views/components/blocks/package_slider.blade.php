@@ -73,14 +73,14 @@
             <button type="button"
                 @click="filterCategory('all')"
                 :class="activeCategory === 'all' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
+                class="px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300 cursor-pointer">
                 All
             </button>
             @foreach($destinations as $dest)
                 <button type="button"
                     @click="filterCategory('{{ $dest->name }}')"
                     :class="activeCategory === '{{ $dest->name }}' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                    class="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer">
+                    class="px-5 py-2 rounded-full text-sm font-bold transition-colors duration-300 cursor-pointer">
                     {{ $dest->name }}
                 </button>
             @endforeach
@@ -101,7 +101,18 @@
 
                             {{-- Image Wrapper --}}
                             <div class="relative rounded-xl overflow-hidden aspect-[16/9] group-hover:opacity-95 transition-opacity">
-                                <img src="{{ $package->thumbnail ? Storage::url($package->thumbnail) : 'https://placehold.co/800x600?text='.urlencode($package->name) }}"
+                                @php
+                                    $pThumb = $package->thumbnail;
+                                    $pMed = null;
+                                    if ($pThumb) {
+                                        $pMed = \App\Services\ImageOptimizationService::getMediumUrl($pThumb);
+                                        $pThumb = Storage::url($pThumb);
+                                    } else {
+                                        $pThumb = 'https://placehold.co/800x600?text='.urlencode($package->name);
+                                    }
+                                @endphp
+                                <img src="{{ $pMed ?? $pThumb }}"
+                                     @if($pMed) srcset="{{ $pMed }} 600w, {{ $pThumb }} 1080w" sizes="(max-width: 768px) 90vw, 380px" @endif
                                      loading="lazy"
                                      alt="{{ $package->name }}"
                                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -243,21 +254,25 @@
         return true;
     }
 
-    // Try immediately
-    if (initPackageSwiper()) return;
-
-    // Retry on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', function() {
+    // Try after a frame to avoid forced reflow during initial layout
+    requestAnimationFrame(function() {
         if (initPackageSwiper()) return;
 
-        // Retry with polling (Vite module scripts load async)
-        var attempts = 0;
-        var poll = setInterval(function() {
-            attempts++;
-            if (initPackageSwiper() || attempts > 100) {
-                clearInterval(poll);
-            }
-        }, 50);
+        // Retry on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            requestAnimationFrame(function() {
+                if (initPackageSwiper()) return;
+
+                // Retry with polling (Vite module scripts load async)
+                var attempts = 0;
+                var poll = setInterval(function() {
+                    attempts++;
+                    if (initPackageSwiper() || attempts > 100) {
+                        clearInterval(poll);
+                    }
+                }, 50);
+            });
+        });
     });
 })();
 </script>

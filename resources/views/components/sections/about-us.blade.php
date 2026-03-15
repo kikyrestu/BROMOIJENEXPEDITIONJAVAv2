@@ -18,6 +18,13 @@
     $mainImage = $getImageUrl($data['main_image'] ?? null, 'https://placehold.co/600x800?text=Adventure');
     $secondaryImage = $getImageUrl($data['secondary_image'] ?? null, 'https://placehold.co/500x500?text=Joy');
     
+    // Medium variants for srcset
+    $mainRawPath = $data['main_image'] ?? null;
+    $mainMedium = ($mainRawPath && !str_starts_with($mainRawPath, 'http')) 
+        ? \App\Services\ImageOptimizationService::getMediumUrl($mainRawPath) : null;
+    $secRawPath = $data['secondary_image'] ?? null;
+    $secMedium = ($secRawPath && !str_starts_with($secRawPath, 'http'))
+        ? \App\Services\ImageOptimizationService::getMediumUrl($secRawPath) : null;
     // Features
     $features = $data['features'] ?? [
         [
@@ -59,7 +66,9 @@
                 
                 {{-- Main Image --}}
                 <div class="relative z-10 w-[65%] ml-auto lg:ml-8 aspect-[4/5] rounded-tl-[60px] rounded-br-[30px] overflow-hidden shadow-xl border-4 border-white">
-                    <img data-live="image_url" src="{{ $mainImage }}" alt="About Bromo Ijen Expedition" loading="lazy" class="w-full h-full object-cover">
+                    <img data-live="image_url" src="{{ $mainMedium ?? $mainImage }}" 
+                         @if($mainMedium) srcset="{{ $mainMedium }} 600w, {{ $mainImage }} 1080w" sizes="(max-width: 768px) 65vw, 400px" @endif
+                         alt="About Bromo Ijen Expedition" loading="lazy" class="w-full h-full object-cover">
                     
                     {{-- Play Button Overlay --}}
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -73,7 +82,9 @@
 
                 {{-- Secondary Image --}}
                 <div class="absolute -bottom-6 -right-2 md:right-8 lg:right-16 w-[45%] aspect-square bg-white p-2 rounded-tl-[30px] rounded-br-[30px] shadow-lg z-20 hidden md:block border border-slate-100">
-                     <img data-live="secondary_image_url" src="{{ $secondaryImage }}" alt="East Java Adventure Tours" loading="lazy" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
+                     <img data-live="secondary_image_url" src="{{ $secMedium ?? $secondaryImage }}"
+                          @if($secMedium) srcset="{{ $secMedium }} 600w, {{ $secondaryImage }} 1080w" sizes="300px" @endif
+                          alt="East Java Adventure Tours" loading="lazy" class="w-full h-full object-cover rounded-tl-[24px] rounded-br-[24px]">
                 </div>
 
                 {{-- Decorative Green Bar --}}

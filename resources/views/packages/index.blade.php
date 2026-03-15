@@ -63,7 +63,9 @@
                             {{-- Image --}}
                             <div class="relative aspect-[4/3] overflow-hidden">
                                 <a href="{{ route('packages.show', $package->slug) }}">
-                                    <img src="{{ Storage::url($package->thumbnail ?? $package->destination->image_path) }}" 
+                                    @php $pkgThumb = $package->thumbnail ?? $package->destination->image_path; $pkgMed = \App\Services\ImageOptimizationService::getMediumUrl($pkgThumb); @endphp
+                                    <img src="{{ $pkgMed ?? Storage::url($pkgThumb) }}" 
+                                         @if($pkgMed) srcset="{{ $pkgMed }} 600w, {{ Storage::url($pkgThumb) }} 1080w" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" @endif
                                          alt="{{ $package->name }}" loading="lazy"
                                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 </a>

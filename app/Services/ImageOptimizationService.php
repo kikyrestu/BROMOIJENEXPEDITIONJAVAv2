@@ -14,12 +14,17 @@ class ImageOptimizationService
     // Max dimensions for optimized images
     const MAX_WIDTH = 1920;
     const MAX_HEIGHT = 1080;
-    const OPTIMIZED_QUALITY = 82;
+    const OPTIMIZED_QUALITY = 75;
+
+    // Medium variant for card/grid display
+    const MEDIUM_WIDTH = 600;
+    const MEDIUM_HEIGHT = 800;
+    const MEDIUM_QUALITY = 72;
 
     // Thumbnail dimensions  
     const THUMB_WIDTH = 400;
     const THUMB_HEIGHT = 400;
-    const THUMB_QUALITY = 78;
+    const THUMB_QUALITY = 72;
 
     public function __construct()
     {
@@ -60,17 +65,22 @@ class ImageOptimizationService
         $ext = $this->supportsWebp ? 'webp' : 'jpg';
 
         $optimizedPath = $directory . '/' . $filename . '_optimized.' . $ext;
+        $mediumPath = $directory . '/' . $filename . '_medium.' . $ext;
         $thumbnailPath = $directory . '/' . $filename . '_thumb.' . $ext;
 
         try {
-            // Generate optimized version
+            // Generate optimized version (full size)
             $this->createOptimized($fullPath, $optimizedPath, $disk);
+
+            // Generate medium version (for card/grid display)
+            $this->createMedium($fullPath, $mediumPath, $disk);
 
             // Generate thumbnail
             $this->createThumbnail($fullPath, $thumbnailPath, $disk);
 
             return [
                 'optimized_path' => $optimizedPath,
+                'medium_path' => $mediumPath,
                 'thumbnail_path' => $thumbnailPath,
             ];
         } catch (\Exception $e) {
@@ -99,6 +109,19 @@ class ImageOptimizationService
         }
 
         $encoded = $this->encode($image, self::OPTIMIZED_QUALITY);
+        Storage::disk($disk)->put($destPath, (string) $encoded);
+    }
+
+    /**
+     * Create a medium version for card/grid display (600x800 max).
+     */
+    protected function createMedium(string $sourcePath, string $destPath, string $disk): void
+    {
+        $image = $this->manager->read(file_get_contents($sourcePath));
+
+        $image->scaleDown(width: self::MEDIUM_WIDTH, height: self::MEDIUM_HEIGHT);
+
+        $encoded = $this->encode($image, self::MEDIUM_QUALITY);
         Storage::disk($disk)->put($destPath, (string) $encoded);
     }
 
@@ -154,6 +177,30 @@ class ImageOptimizationService
         }
 
         return self::getDisplayUrl($originalPath, $optimizedPath, $disk);
+    }
+
+    /**
+     * Get the medium variant URL from an image path.
+     * Derives _medium path from _optimized or original path.
+     */
+    public static function getMediumUrl(string $imagePath, string $disk = 'public'): ?string
+    {
+        if (str_starts_with($imagePath, 'http')) {
+            return null;
+        }
+
+        // Derive medium path from current path
+        $mediumPath = preg_replace('/_optimized\.(\w+)$/', '_medium.$1', $imagePath);
+        if ($mediumPath === $imagePath) {
+            // No _optimized suffix, try adding _medium before extension
+            $mediumPath = preg_replace('/\.(\w+)$/', '_medium.$1', $imagePath);
+        }
+
+        if (Storage::disk($disk)->exists($mediumPath)) {
+            return Storage::disk($disk)->url($mediumPath);
+        }
+
+        return null;
     }
 
     /**

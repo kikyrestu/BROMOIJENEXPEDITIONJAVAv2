@@ -58,9 +58,10 @@
                     @endphp
                     <div class="{{ $sizeClass }} group relative rounded-3xl overflow-hidden cursor-pointer"
                          @click="showLightbox = true; activeSrc = '{{ $item->original_url }}'; activeAlt = '{{ addslashes($item->alt_text ?? $item->title) }}'">
-                        <img src="{{ $item->display_url }}" 
+                        <img src="{{ $item->thumbnail_url }}" 
                              alt="{{ $item->alt_text ?? $item->title }}"
                              loading="lazy"
+                             srcset="{{ $item->thumbnail_url }} 400w, {{ $item->display_url }} 1080w" sizes="(max-width: 768px) 50vw, 33vw"
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
                         
