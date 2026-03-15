@@ -49,7 +49,8 @@ class DestinationResource extends Resource
                 Forms\Components\FileUpload::make('thumbnail_path')
                     ->image()
                     ->disk('public')
-                    ->directory('destinations'),
+                    ->directory('destinations')
+                    ->maxSize(10240),
                 Forms\Components\Toggle::make('is_featured')
                     ->required(),
             ]);

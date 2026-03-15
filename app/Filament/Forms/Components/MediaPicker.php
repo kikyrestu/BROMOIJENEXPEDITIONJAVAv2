@@ -32,6 +32,7 @@ class MediaPicker
                     ->image()
                     ->disk('public')
                     ->directory($directory ?? $name)
+                    ->maxSize(10240)
                     ->visible(fn (callable $get) => $get("{$name}_mode") === 'upload'),
 
                 Select::make("{$name}_media_id")

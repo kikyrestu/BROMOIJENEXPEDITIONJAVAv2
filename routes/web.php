@@ -13,10 +13,10 @@ Route::post('/', function() {
     return redirect('/');
 });
 
-// UPLOAD FIX: Bypass signature validation using custom controller
+// UPLOAD FIX: Custom controller with signature validation restored
 Route::post('/livewire/upload-file', [\App\Http\Controllers\LivewireUploadController::class, 'handle'])
     ->name('livewire.upload-file')
-    ->middleware(['web', 'throttle:60,1']);
+    ->middleware(['web', 'auth', 'throttle:60,1']);
 
 Route::get('/packages', function () {
     $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->where('status', 'published')->get();

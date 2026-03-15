@@ -53,6 +53,7 @@ class BannerForm
                                 \Filament\Forms\Components\FileUpload::make('image_path')
                                     ->image()
                                     ->directory('banners')
+                                    ->maxSize(10240)
                                     ->visible(fn ($get) => $get('type') === 'image'),
                                 
                                 \Filament\Schemas\Components\Grid::make(2)

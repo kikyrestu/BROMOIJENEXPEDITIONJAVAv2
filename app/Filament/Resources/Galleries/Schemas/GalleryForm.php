@@ -15,6 +15,8 @@ class GalleryForm
                 TextInput::make('title'),
                 FileUpload::make('image_path')
                     ->image()
+                    ->directory('gallery-images')
+                    ->maxSize(10240)
                     ->required(),
                 TextInput::make('category'),
                 TextInput::make('sort_order')

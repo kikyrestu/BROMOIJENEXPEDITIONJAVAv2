@@ -52,6 +52,7 @@ class TestimonialForm
                             ->label('Customer Photo')
                             ->image()
                             ->directory('testimonials')
+                            ->maxSize(5120)
                             ->columnSpanFull(),
                     ]),
             ]);

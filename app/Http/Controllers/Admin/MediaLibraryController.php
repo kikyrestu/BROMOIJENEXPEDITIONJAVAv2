@@ -51,8 +51,8 @@ class MediaLibraryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:51200', // 50MB
-            'directory' => 'nullable|string',
+            'file' => 'required|file|max:51200|mimes:jpg,jpeg,png,gif,webp,svg,mp4,mov,avi,wmv,pdf',
+            'directory' => 'nullable|string|in:media,gallery,banners,packages,destinations,blog-thumbnails,heroes,settings,about,hotspots,testimonials,seo-images',
         ]);
 
         $directory = $request->input('directory', 'media'); // Default to 'media' top level or specific

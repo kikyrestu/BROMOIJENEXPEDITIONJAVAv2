@@ -11,7 +11,7 @@ class LivewireUploadController extends Controller
 {
     public function handle()
     {
-        // BYPASS: abort_unless(request()->hasValidSignature(), 401);
+        abort_unless(request()->hasValidSignature(), 401);
 
         $disk = FileUploadConfiguration::disk();
 

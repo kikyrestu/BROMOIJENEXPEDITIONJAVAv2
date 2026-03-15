@@ -46,6 +46,7 @@ class GalleryResource extends Resource
                     ->image()
                     ->disk('public')
                     ->directory('gallery-images')
+                    ->maxSize(10240)
                     ->required()
                     ->columnSpanFull()
                     ->helperText('Images are automatically optimized on upload'),

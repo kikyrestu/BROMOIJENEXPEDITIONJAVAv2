@@ -58,6 +58,8 @@ class PageResource extends Resource
                                 Forms\Components\FileUpload::make('video_file')
                                     ->disk('public')
                                     ->directory('hero-videos')
+                                    ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'])
+                                    ->maxSize(102400)
                                     ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('video_source') === 'upload'),
 
                                 Forms\Components\Toggle::make('show_button')
@@ -91,10 +93,12 @@ class PageResource extends Resource
                                 Forms\Components\FileUpload::make('main_image')
                                     ->image()
                                     ->directory('about')
+                                    ->maxSize(10240)
                                     ->helperText('If seeded from database, this might appear empty. Upload a new image to replace.'),
                                 Forms\Components\FileUpload::make('secondary_image')
                                     ->image()
                                     ->directory('about')
+                                    ->maxSize(10240)
                                     ->helperText('If seeded from database, this might appear empty. Upload a new image to replace.'),
                                 Forms\Components\Repeater::make('features')
                                     ->schema([
@@ -129,6 +133,8 @@ class PageResource extends Resource
                                         Forms\Components\FileUpload::make('image')
                                             ->image()
                                             ->required()
+                                            ->directory('gallery')
+                                            ->maxSize(10240)
                                             ->helperText('Seeded URLs will not show preview. Upload to change.'),
                                         Forms\Components\TextInput::make('caption'),
                                         Forms\Components\Select::make('size')
@@ -173,6 +179,7 @@ class PageResource extends Resource
                                             ->avatar()
                                             ->disk('public')
                                             ->directory('testimonials')
+                                            ->maxSize(2048)
                                             ->helperText('Seeded URLs will not show preview. Upload to change.'),
                                         Forms\Components\TextInput::make('rating')->numeric()->default(5)->minValue(1)->maxValue(5),
                                     ])
@@ -200,7 +207,7 @@ class PageResource extends Resource
                                     ->schema([
                                         Forms\Components\TextInput::make('title')->required(),
                                         Forms\Components\TextInput::make('category'),
-                                        Forms\Components\FileUpload::make('image')->image()->directory('blog-covers'),
+                                        Forms\Components\FileUpload::make('image')->image()->directory('blog-covers')->maxSize(10240),
                                         Forms\Components\Textarea::make('excerpt'),
                                     ]),
                             ]),
@@ -220,6 +227,7 @@ class PageResource extends Resource
                                 Forms\Components\FileUpload::make('image_file')
                                     ->image()
                                     ->directory('hotspots')
+                                    ->maxSize(10240)
                                     ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('image_source') === 'upload'),
                                 Forms\Components\TextInput::make('image_url')
                                     ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('image_source') === 'url'),

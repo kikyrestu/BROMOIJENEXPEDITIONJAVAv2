@@ -82,7 +82,8 @@ class Settings extends Page implements HasForms
                                     ->label('Site Logo')
                                     ->image()
                                     ->disk('public')
-                                    ->directory('settings'),
+                                    ->directory('settings')
+                                    ->maxSize(5120),
                                 \Filament\Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
@@ -106,7 +107,8 @@ class Settings extends Page implements HasForms
                                     ->label('Default OG Image')
                                     ->image()
                                     ->disk('public')
-                                    ->directory('settings'),
+                                    ->directory('settings')
+                                    ->maxSize(5120),
                             ]),
 
                         // 4. Search Engine Verification
@@ -152,6 +154,7 @@ class Settings extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('heroes')
+                                            ->maxSize(10240)
                                             ->imageResizeMode('cover')
                                             ->imageCropAspectRatio('16:5'),
                                         \Filament\Forms\Components\FileUpload::make('hero_image_blogs')
@@ -159,6 +162,7 @@ class Settings extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('heroes')
+                                            ->maxSize(10240)
                                             ->imageResizeMode('cover')
                                             ->imageCropAspectRatio('16:5'),
                                         \Filament\Forms\Components\FileUpload::make('hero_image_gallery')
@@ -166,6 +170,7 @@ class Settings extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('heroes')
+                                            ->maxSize(10240)
                                             ->imageResizeMode('cover')
                                             ->imageCropAspectRatio('16:5'),
                                     ])->columns(3),

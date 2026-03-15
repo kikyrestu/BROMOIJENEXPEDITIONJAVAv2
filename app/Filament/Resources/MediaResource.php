@@ -45,7 +45,6 @@ class MediaResource extends Resource
                     ->disk('public') // Force public disk
                     ->required()
                     ->directory('media')
-                    ->preserveFilenames()
                     ->maxSize(102400) // 100MB
                     ->acceptedFileTypes(['image/*', 'video/*', 'application/pdf'])
                     ->imagePreviewHeight('250')

@@ -46,11 +46,13 @@ class PackageResource extends Resource
                                         Forms\Components\FileUpload::make('thumbnail')
                                             ->image()
                                             ->directory('packages/thumbnails')
+                                            ->maxSize(10240)
                                             ->columnSpan(1),
                                         Forms\Components\FileUpload::make('gallery')
                                             ->multiple()
                                             ->image()
                                             ->directory('packages/gallery')
+                                            ->maxSize(10240)
                                             ->columnSpan(1),
                                     ]),
                                 
