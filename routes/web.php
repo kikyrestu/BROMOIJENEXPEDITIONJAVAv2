@@ -13,10 +13,8 @@ Route::post('/', function() {
     return redirect('/');
 });
 
-// UPLOAD FIX: Custom controller with signature validation restored
-Route::post('/livewire/upload-file', [\App\Http\Controllers\LivewireUploadController::class, 'handle'])
-    ->name('livewire.upload-file')
-    ->middleware(['web', 'auth', 'throttle:60,1']);
+// Livewire file upload uses its built-in route with signed URL validation.
+// Extra middleware configured in config/livewire.php temporary_file_upload.middleware
 
 Route::get('/packages', function () {
     $packages = \App\Models\Package::with(['destination', 'categoryRelation'])->where('status', 'published')->get();

@@ -67,7 +67,7 @@ return [
         'disk' => null,        // Example: 'local', 's3'              | Default: 'default'
         'rules' => ['required', 'file', 'max:12288', 'mimes:jpg,jpeg,png,gif,webp,svg,mp4,mov,avi,wmv,pdf'],
         'directory' => null,   // Example: 'tmp'                      | Default: 'livewire-tmp'
-        'middleware' => null,  // Reverted to default (throttle handled in route)
+        'middleware' => ['throttle:60,1'],  // Signed URL validates auth; throttle for rate limiting
         'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs...
             'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
             'mov', 'avi', 'wmv', 'mp3', 'm4a',
