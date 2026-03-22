@@ -345,6 +345,15 @@
     @php
         $footerSocials = is_string($socialLinks) ? json_decode($socialLinks, true) : $socialLinks;
         $footerSocials = $footerSocials ?? [];
+        $footerQuickLinks = collect($navMenus)
+            ->filter(fn ($menu) => $menu->is_active)
+            ->map(fn ($menu) => [
+                'label' => $menu->name,
+                'url' => $menu->link,
+            ])
+            ->filter(fn ($item) => !empty($item['url']) && $item['url'] !== '#')
+            ->take(8)
+            ->values();
     @endphp
     <footer class="bg-gradient-to-b from-slate-900 to-slate-950 text-white">
         {{-- Main Footer Content --}}
@@ -398,21 +407,18 @@
                         Quick Links
                     </h4>
                     <ul class="space-y-3">
-                        @foreach([
-                            ['label' => 'Home', 'url' => '/'],
-                            ['label' => 'Our Packages', 'url' => '/#packages'],
-                            ['label' => 'Destinations', 'url' => '/#destinations'],
-                            ['label' => 'Gallery', 'url' => '/#gallery'],
-                            ['label' => 'Reviews', 'url' => '/reviews'],
-                            ['label' => 'About Us', 'url' => '/#aboutus'],
-                        ] as $link)
+                        @forelse($footerQuickLinks as $link)
                         <li>
                             <a href="{{ $link['url'] }}" class="text-slate-400 hover:text-brand-primary transition-colors duration-200 flex items-center gap-2 group">
                                 <svg class="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                                 <span>{{ $link['label'] }}</span>
                             </a>
                         </li>
-                        @endforeach
+                        @empty
+                        <li>
+                            <span class="text-slate-500 text-sm">No quick links configured. Manage them in CMS Navigation Menus.</span>
+                        </li>
+                        @endforelse
                     </ul>
                 </div>
 
