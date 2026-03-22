@@ -345,6 +345,29 @@
     @php
         $footerSocials = is_string($socialLinks) ? json_decode($socialLinks, true) : $socialLinks;
         $footerSocials = $footerSocials ?? [];
+
+        $collectMenuLinks = function ($menus) use (&$collectMenuLinks) {
+            $links = collect();
+
+            foreach ($menus as $menu) {
+                $links->push([
+                    'label' => $menu->name,
+                    'url' => $menu->link,
+                ]);
+
+                $children = $menu->effectiveChildren;
+                if ($children && $children->count() > 0) {
+                    $links = $links->merge($collectMenuLinks($children));
+                }
+            }
+
+            return $links;
+        };
+
+        $allNavigationLinks = $collectMenuLinks($navMenus)
+            ->filter(fn ($item) => !empty($item['url']) && $item['url'] !== '#')
+            ->values();
+
         $footerQuickLinks = collect($navMenus)
             ->filter(fn ($menu) => $menu->is_active)
             ->map(fn ($menu) => [
@@ -353,6 +376,22 @@
             ])
             ->filter(fn ($item) => !empty($item['url']) && $item['url'] !== '#')
             ->take(8)
+            ->values();
+
+        $footerLegalLinks = $allNavigationLinks
+            ->filter(function ($item) {
+                $label = strtolower($item['label'] ?? '');
+                $url = strtolower($item['url'] ?? '');
+
+                return str_contains($label, 'privacy')
+                    || str_contains($label, 'terms')
+                    || str_contains($label, 'cookie')
+                    || str_contains($url, 'privacy')
+                    || str_contains($url, 'terms')
+                    || str_contains($url, 'cookie');
+            })
+            ->unique('url')
+            ->take(3)
             ->values();
     @endphp
     <footer class="bg-gradient-to-b from-slate-900 to-slate-950 text-white">
@@ -489,9 +528,11 @@
             <div class="w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-16 py-6 flex flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left">
                 <p class="text-slate-500 text-sm">&copy; {{ date('Y') }} {{ $providerName }}. All rights reserved.</p>
                 <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm">
-                    <a href="#" class="text-slate-500 hover:text-white transition">Privacy Policy</a>
-                    <a href="#" class="text-slate-500 hover:text-white transition">Terms of Service</a>
-                    <a href="#" class="text-slate-500 hover:text-white transition">Cookie Policy</a>
+                    @forelse($footerLegalLinks as $legalLink)
+                        <a href="{{ $legalLink['url'] }}" class="text-slate-500 hover:text-white transition">{{ $legalLink['label'] }}</a>
+                    @empty
+                        <span class="text-slate-500">Configure legal links (Privacy/Terms/Cookie) in Navigation Menu CMS.</span>
+                    @endforelse
                 </div>
             </div>
         </div>
