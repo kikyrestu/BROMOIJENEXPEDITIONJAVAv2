@@ -276,7 +276,11 @@ class PageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->searchable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable()
+                    ->description(fn (Page $record) => $record->slug === 'home'
+                        ? 'Protected: deleting this page will break the public homepage.'
+                        : null),
                 Tables\Columns\TextColumn::make('slug')->searchable(),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime(),
             ])
