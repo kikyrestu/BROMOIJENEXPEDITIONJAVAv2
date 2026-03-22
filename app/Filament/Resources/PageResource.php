@@ -21,6 +21,11 @@ class PageResource extends Resource
     {
         return $schema
             ->schema([
+                Forms\Components\Placeholder::make('home_page_warning')
+                    ->label('Important')
+                    ->content('This is the HOME page. Do not delete it or change its slug, otherwise the public website home route will fail.')
+                    ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get, ?Page $record) => ($record?->slug === 'home') || ($get('slug') === 'home')),
+
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->live(onBlur: true)
@@ -28,6 +33,8 @@ class PageResource extends Resource
 
                 Forms\Components\TextInput::make('slug')
                     ->required()
+                    ->disabled(fn (?Page $record) => $record?->slug === 'home')
+                    ->helperText('Do not change slug "home" for the homepage record.')
                     ->unique(ignoreRecord: true),
 
                 Forms\Components\Builder::make('content')
@@ -281,7 +288,7 @@ class PageResource extends Resource
             ])
             ->bulkActions([
                 \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                    // Intentionally no bulk delete for pages to avoid accidental homepage removal.
                 ]),
             ]);
     }

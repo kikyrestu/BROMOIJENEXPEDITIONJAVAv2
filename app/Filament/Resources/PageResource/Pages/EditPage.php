@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PageResource\Pages;
 
 use App\Filament\Resources\PageResource;
+use App\Models\Page;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -15,7 +16,16 @@ class EditPage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\Action::make('homeProtectedNotice')
+                ->label('Home Page Is Protected')
+                ->color('warning')
+                ->icon('heroicon-o-shield-exclamation')
+                ->disabled()
+                ->visible(fn () => $this->record->slug === 'home')
+                ->tooltip('The homepage cannot be deleted because it is required by the public route.'),
+
+            Actions\DeleteAction::make()
+                ->hidden(fn () => $this->record->slug === 'home'),
         ];
     }
 
