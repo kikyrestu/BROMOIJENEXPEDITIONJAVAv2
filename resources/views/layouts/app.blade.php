@@ -152,7 +152,10 @@
     {{-- Page-specific structured data (breadcrumbs, schemas) pushed from views --}}
     @stack('structured-data')
 
-    {{-- Favicons (static square PNGs for Google Search compatibility) --}}
+    {{-- Favicons (provide multiple formats/sizes for better crawler/browser compatibility) --}}
+    <link rel="icon" href="/favicon-v2.ico" sizes="any">
+    <link rel="shortcut icon" href="/favicon-v2.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png">
