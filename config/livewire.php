@@ -64,7 +64,7 @@ return [
     */
 
     'temporary_file_upload' => [
-        'disk' => null,        // Example: 'local', 's3'              | Default: 'default'
+        'disk' => 'local',     // Explicitly use 'local' disk for temp uploads (not the 'public' default)
         'rules' => ['required', 'file', 'max:12288', 'mimes:jpg,jpeg,png,gif,webp,svg,mp4,mov,avi,wmv,pdf'],
         'directory' => null,   // Example: 'tmp'                      | Default: 'livewire-tmp'
         'middleware' => ['throttle:60,1'],  // Signed URL validates auth; throttle for rate limiting

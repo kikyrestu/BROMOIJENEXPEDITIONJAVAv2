@@ -38,10 +38,25 @@ class OptimizeImageJob implements ShouldQueue
 
         if ($this->mode === 'in_place') {
             $newPath = $optimizer->optimizeInPlace($this->filePath, $this->disk);
-            if ($newPath) {
+            if ($newPath && $newPath !== $this->filePath) {
                 $model = $this->modelClass::find($this->modelId);
-                if ($model && $model->{$this->fieldName} === $this->filePath) {
-                    $model->withoutEvents(fn () => $model->update([$this->fieldName => $newPath]));
+                if (!$model) return;
+
+                // Handle array fields (e.g., gallery)
+                $currentValue = $model->{$this->fieldName};
+                if (is_array($currentValue)) {
+                    $updated = array_map(
+                        fn ($p) => $p === $this->filePath ? $newPath : $p,
+                        $currentValue
+                    );
+                    if ($updated !== $currentValue) {
+                        $model->withoutEvents(fn () => $model->update([$this->fieldName => $updated]));
+                    }
+                } else {
+                    // Handle scalar fields (e.g., thumbnail)
+                    if ($currentValue === $this->filePath) {
+                        $model->withoutEvents(fn () => $model->update([$this->fieldName => $newPath]));
+                    }
                 }
             }
             return;
