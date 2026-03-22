@@ -65,6 +65,10 @@ class Settings extends Page implements HasForms
                                 \Filament\Forms\Components\TextInput::make('provider_phone')
                                     ->label('Provider Phone')
                                     ->tel(),
+                                \Filament\Forms\Components\TextInput::make('whatsapp_number')
+                                    ->label('WhatsApp Number (optional override)')
+                                    ->tel()
+                                    ->helperText('Leave empty to use Provider Phone for WhatsApp links.'),
                                 \Filament\Forms\Components\TextInput::make('provider_email')
                                     ->label('Provider Email')
                                     ->email(),
@@ -76,8 +80,6 @@ class Settings extends Page implements HasForms
                                 \Filament\Forms\Components\TextInput::make('site_name')
                                     ->label('Site Name / Brand')
                                     ->required(),
-                                \Filament\Forms\Components\TextInput::make('site_tagline')
-                                    ->label('Site Tagline'),
                                 \Filament\Forms\Components\FileUpload::make('site_logo')
                                     ->label('Site Logo')
                                     ->image()
@@ -95,8 +97,6 @@ class Settings extends Page implements HasForms
                         // 3. SEO Default Settings
                         \Filament\Schemas\Components\Tabs\Tab::make('SEO Defaults')
                             ->schema([
-                                \Filament\Forms\Components\TextInput::make('default_meta_title')
-                                    ->label('Default Meta Title'),
                                 \Filament\Forms\Components\Textarea::make('default_meta_description')
                                     ->label('Default Meta Description')
                                     ->rows(2),
@@ -116,14 +116,9 @@ class Settings extends Page implements HasForms
                             ->schema([
                                 \Filament\Schemas\Components\Section::make('Google Search Console')
                                     ->schema([
-                                        \Filament\Forms\Components\Radio::make('google_verification_method')
-                                            ->options([
-                                                'meta' => 'Meta Tag',
-                                                'file' => 'HTML File',
-                                            ])
-                                            ->default('meta'),
                                         \Filament\Forms\Components\Textarea::make('google_verification_code')
                                             ->label('Verification Code / Tag')
+                                            ->helperText('Paste full meta verification tag from Google Search Console.')
                                             ->rows(2),
                                     ]),
                                 \Filament\Schemas\Components\Section::make('Bing Webmaster Tools')
@@ -136,35 +131,9 @@ class Settings extends Page implements HasForms
                         // 5. Template & Page Heroes
                         \Filament\Schemas\Components\Tabs\Tab::make('Appearance')
                             ->schema([
-                                \Filament\Forms\Components\Select::make('active_template')
-                                    ->label('Active Template')
-                                    ->options([
-                                        'default' => 'Modern Cards (Default)',
-                                        'gotur' => 'GoTur Travel Agency (Professional)',
-                                        'custom' => 'Custom (Coming Soon)',
-                                    ])
-                                    ->default('gotur')
-                                    ->required(),
-
                                 \Filament\Schemas\Components\Section::make('Page Hero Images')
-                                    ->description('Background images for each page hero section. Recommended size: 1920x600px.')
+                                    ->description('Currently used by Gallery page hero. Recommended size: 1920x600px.')
                                     ->schema([
-                                        \Filament\Forms\Components\FileUpload::make('hero_image_packages')
-                                            ->label('Packages Page Hero')
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('heroes')
-                                            ->maxSize(10240)
-                                            ->imageResizeMode('cover')
-                                            ->imageCropAspectRatio('16:5'),
-                                        \Filament\Forms\Components\FileUpload::make('hero_image_blogs')
-                                            ->label('Blogs Page Hero')
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('heroes')
-                                            ->maxSize(10240)
-                                            ->imageResizeMode('cover')
-                                            ->imageCropAspectRatio('16:5'),
                                         \Filament\Forms\Components\FileUpload::make('hero_image_gallery')
                                             ->label('Gallery Page Hero')
                                             ->image()
@@ -173,7 +142,7 @@ class Settings extends Page implements HasForms
                                             ->maxSize(10240)
                                             ->imageResizeMode('cover')
                                             ->imageCropAspectRatio('16:5'),
-                                    ])->columns(3),
+                                    ]),
                             ]),
 
                         // 5b. Header Button
@@ -253,23 +222,42 @@ class Settings extends Page implements HasForms
                                     ->collapsible(),
                             ]),
 
-                        // 6. System Settings
+                        // 6. Custom Scripts
+                        \Filament\Schemas\Components\Tabs\Tab::make('Custom Scripts')
+                            ->schema([
+                                \Filament\Forms\Components\Textarea::make('site_header_code')
+                                    ->label('Header Code')
+                                    ->rows(6)
+                                    ->helperText('Injected into <head>. Use for analytics tags, pixels, or custom meta scripts.'),
+                                \Filament\Forms\Components\Textarea::make('site_footer_code')
+                                    ->label('Footer Code')
+                                    ->rows(6)
+                                    ->helperText('Injected before </body>. Use for chat widgets or deferred scripts.'),
+                            ]),
+
+                        // 7. System Settings
                         \Filament\Schemas\Components\Tabs\Tab::make('System')
                             ->schema([
+                                \Filament\Forms\Components\Placeholder::make('system_settings_status')
+                                    ->label('Status')
+                                    ->content('These controls are reserved for future integration and currently do not affect runtime behavior.'),
                                 \Filament\Forms\Components\Toggle::make('maintenance_mode')
-                                    ->label('Maintenance Mode'),
+                                    ->label('Maintenance Mode')
+                                    ->disabled(),
                                 \Filament\Forms\Components\Toggle::make('auto_approve_testimonials')
-                                    ->label('Auto-approve Testimonials'),
+                                    ->label('Auto-approve Testimonials')
+                                    ->disabled(),
                                 \Filament\Forms\Components\Toggle::make('email_notifications')
-                                    ->label('Email Notifications (New Booking)'),
+                                    ->label('Email Notifications (New Booking)')
+                                    ->disabled(),
                             ]),
                         
-                        // 7. Backup & Export (Placeholder UI)
+                        // 8. Backup & Export (Placeholder UI)
                         \Filament\Schemas\Components\Tabs\Tab::make('Backup')
                             ->schema([
                                 \Filament\Forms\Components\Placeholder::make('backup_info')
                                     ->label('Backup Management')
-                                    ->content('Create and restore backups of your database and files.'),
+                                    ->content('Coming soon: backup and restore workflow is not connected yet.'),
                                 \Filament\Schemas\Components\Actions::make([
                                     \Filament\Actions\Action::make('create_backup')
                                         ->label('Create Complete Backup (.mswbak)')
