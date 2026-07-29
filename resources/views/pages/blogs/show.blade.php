@@ -92,7 +92,7 @@
     @endpush
 
     {{-- Hero Image --}}
-    <div class="relative h-[45vh] min-h-[320px] md:h-[55vh] md:min-h-[450px] overflow-hidden">
+    <div class="relative h-[60vh] min-h-[400px] md:h-[70vh] md:min-h-[550px] lg:h-[80vh] lg:min-h-[600px] overflow-hidden">
         <img src="{{ $blog->thumbnail_path ? asset('storage/' . $blog->thumbnail_path) : 'https://placehold.co/1920x800?text=' . urlencode($blog->title) }}" 
              alt="{{ $blog->title }}"
              class="w-full h-full object-cover">
