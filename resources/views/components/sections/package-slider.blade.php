@@ -100,14 +100,14 @@
         <div class="swiper !overflow-visible" id="{{ $sliderId }}_swiper">
             <div class="swiper-wrapper py-4 pb-12">
                 @foreach($packages as $package)
-                    <div class="swiper-slide !w-[280px] md:!w-[380px] h-auto transition-all duration-300"
+                    <div class="swiper-slide !w-[280px] md:!w-[380px] h-auto flex flex-col transition-all duration-300"
                          x-show="isVisible('{{ $package->destination->name ?? '' }}', '{{ $package->categoryRelation->name ?? '' }}')"
                          x-transition:enter="transition ease-out duration-300"
                          x-transition:enter-start="opacity-0 scale-95"
                          x-transition:enter-end="opacity-100 scale-100">
                         
                         {{-- Card Container --}}
-                        <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col group">
+                        <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 hover:shadow-xl transition-all duration-300 flex-1 w-full flex flex-col group">
                             
                             {{-- Image Wrapper --}}
                             <div class="relative rounded-xl overflow-hidden aspect-[16/9] group-hover:opacity-95 transition-opacity">
