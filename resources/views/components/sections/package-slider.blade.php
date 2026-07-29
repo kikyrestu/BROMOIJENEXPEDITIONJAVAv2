@@ -98,7 +98,7 @@
 
         {{-- Swiper --}}
         <div class="swiper !overflow-visible" id="{{ $sliderId }}_swiper">
-            <div class="swiper-wrapper py-4 pb-12">
+            <div class="swiper-wrapper !items-stretch py-4 pb-12">
                 @foreach($packages as $package)
                     <div class="swiper-slide !w-[280px] md:!w-[380px] h-auto flex flex-col transition-all duration-300"
                          x-show="isVisible('{{ $package->destination->name ?? '' }}', '{{ $package->categoryRelation->name ?? '' }}')"
