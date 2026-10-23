@@ -267,6 +267,42 @@ class PageResource extends Resource
                                     ->label('Content')
                                     ->required(),
                             ]),
+                            
+                        // --- TAMBAHAN: Why Choose Us Section ---
+                        \Filament\Forms\Components\Builder\Block::make('why_choose_us')
+                            ->label('Why Choose Us Section')
+                            ->schema([
+                                \Filament\Forms\Components\TextInput::make('badge_text')->default('Why BromoIjen'),
+                                \Filament\Forms\Components\TextInput::make('title_prefix')->default('Why Travelers'),
+                                \Filament\Forms\Components\TextInput::make('title_suffix')->default('Choose Us')
+                                    ->helperText('Bagian ini tampil italic (aksen).'),
+                                \Filament\Forms\Components\Textarea::make('subtitle')->rows(2),
+                                \Filament\Forms\Components\Select::make('layout')
+                                    ->options([
+                                        'grid-2' => '2 Kolom',
+                                        'grid-3' => '3 Kolom',
+                                        'grid-4' => '4 Kolom',
+                                    ])->default('grid-3'),
+                                \Filament\Forms\Components\Repeater::make('items')
+                                    ->label('Item (icon + judul + deskripsi)')
+                                    ->schema([
+                                        \Filament\Forms\Components\Select::make('icon')
+                                            ->options([
+                                                'sparkles' => 'Sparkles',
+                                                'calendar' => 'Calendar',
+                                                'rocket' => 'Rocket',
+                                                'chat' => 'Chat',
+                                                'phone' => 'Phone',
+                                                'envelope' => 'Envelope',
+                                            ])->default('sparkles'),
+                                        \Filament\Forms\Components\TextInput::make('title')->required(),
+                                        \Filament\Forms\Components\Textarea::make('description')->rows(2),
+                                    ])
+                                    ->defaultItems(4)
+                                    ->reorderable()
+                                    ->collapsible(),
+                            ]),
+                        // ---------------------------------------
                     ])
                     ->columnSpanFull(),
             ]);

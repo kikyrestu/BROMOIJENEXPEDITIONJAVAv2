@@ -643,7 +643,6 @@
                                      </div>
                                 </template>
 
-
                                 <!-- DESTINATIONS GRID - Auto from DB -->
                                 <template x-if="block.type === 'exclusive_destinations'">
                                     <div class="space-y-4">
@@ -744,6 +743,51 @@
                                         </div>
                                     </div>
                                 </template>
+                                
+                                <!-- --- TAMBAHAN: WHY CHOOSE US SECTION --- -->
+                                <template x-if="block.type === 'why_choose_us'">
+                                    <div class="space-y-3">
+                                        <input type="text" x-model="block.data.badge_text" @input="updatePreview(index, 'badge_text', $event.target.value)" class="w-full text-sm border-slate-200 rounded-md p-2" placeholder="Badge">
+                                        
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <input type="text" x-model="block.data.title_prefix" @input="updatePreview(index, 'title_prefix', $event.target.value)" class="w-full text-sm border-slate-200 rounded-md p-2" placeholder="Judul (awal)">
+                                            <input type="text" x-model="block.data.title_suffix" @input="updatePreview(index, 'title_suffix', $event.target.value)" class="w-full text-sm border-slate-200 rounded-md p-2" placeholder="Judul (aksen)">
+                                        </div>
+                                        
+                                        <textarea x-model="block.data.subtitle" @input="updatePreview(index, 'subtitle', $event.target.value)" rows="2" class="w-full text-sm border-slate-200 rounded-md p-2" placeholder="Subtitle"></textarea>
+                                        
+                                        <select x-model="block.data.layout" @change="refreshPreview()" class="w-full text-sm border-slate-200 rounded-md p-2">
+                                            <option value="grid-2">2 Kolom</option>
+                                            <option value="grid-3">3 Kolom</option>
+                                            <option value="grid-4">4 Kolom</option>
+                                        </select>
+
+                                        <div class="flex items-center justify-between">
+                                            <label class="text-xs font-bold text-slate-500 uppercase">Items</label>
+                                            <button @click="if(!block.data.items) block.data.items = []; block.data.items.push({ icon: 'sparkles', title: 'New Item', description: '' }); refreshPreview();" class="text-xs bg-slate-800 text-white px-2 py-1 rounded font-bold hover:bg-slate-700">+ Add</button>
+                                        </div>
+
+                                        <template x-for="(item, itemIndex) in (block.data.items || [])" :key="itemIndex">
+                                            <div class="bg-white border border-slate-200 rounded p-2 space-y-1">
+                                                <div class="flex items-center justify-between">
+                                                    <span class="text-[10px] font-bold text-slate-400">#<span x-text="itemIndex + 1"></span></span>
+                                                    <button @click="block.data.items.splice(itemIndex, 1); refreshPreview()" class="text-red-400 hover:text-red-500 text-xs">hapus</button>
+                                                </div>
+                                                <select x-model="item.icon" @change="refreshPreview()" class="w-full text-xs border-slate-100 rounded">
+                                                    <option value="sparkles">Sparkles</option>
+                                                    <option value="calendar">Calendar</option>
+                                                    <option value="rocket">Rocket</option>
+                                                    <option value="chat">Chat</option>
+                                                    <option value="phone">Phone</option>
+                                                    <option value="envelope">Envelope</option>
+                                                </select>
+                                                <input type="text" x-model="item.title" placeholder="Judul item" @input="updatePreview(index, 'item_' + itemIndex + '_title', item.title)" class="w-full text-xs border-slate-100 rounded">
+                                                <textarea x-model="item.description" placeholder="Deskripsi" rows="2" @input="updatePreview(index, 'item_' + itemIndex + '_description', item.description)" class="w-full text-xs border-slate-100 rounded"></textarea>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <!-- --------------------------------------- -->
 
                             </div>
                         </div>
@@ -751,10 +795,19 @@
                 </div>
                 
                 <div class="mt-6 text-center">
-                    <button class="text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition">
-                        + Add New Block
-                    </button>
-                    <p class="text-xs text-slate-400 mt-2">More blocks coming soon</p>
+                    <!-- --- TAMBAHAN: DROPDOWN ADD NEW BLOCK --- -->
+                    <div x-data="{ open: false }" class="relative inline-block">
+                        <button @click="open = !open" class="text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition">
+                            + Add New Block
+                        </button>
+                        <div x-show="open" @click.outside="open = false" x-transition class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-2 z-50 text-left">
+                            <template x-for="item in blockCatalog" :key="item.type">
+                                <button @click="addBlock(item); open = false" class="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-slate-100" x-text="item.label"></button>
+                            </template>
+                        </div>
+                    </div>
+                    <!-- --------------------------------------- -->
+                    <p class="text-xs text-slate-400 mt-2">Select block type from menu</p>
                 </div>
             </div>
 
@@ -803,12 +856,11 @@
         function visualEditor() {
             return {
                 sidebarOpen: true,
-                deviceMode: 'desktop', // desktop, mobile
+                deviceMode: 'desktop',
                 activeBlock: 0,
                 isSaving: false,
                 showToast: false,
 
-                // Data Injected from Controller
                 allDestinations: @json($allDestinations ?? []),
                 allPackages: @json($allPackages ?? []),
                 
@@ -816,10 +868,42 @@
                     id: {{ $page->id }},
                     title: @json($page->title),
                     content: @json($page->content ?? [])
-                }, // Re-mapped to support potential null content
+                },
+
+                // --- TAMBAHAN: FUNGSI REFRESH & KATALOG BLOK ---
+                refreshPreview() {
+                    if (this.$refs.previewFrame && this.$refs.previewFrame.contentWindow) {
+                        this.$refs.previewFrame.contentWindow.location.reload();
+                    }
+                },
                 
-
-
+                blockCatalog: [
+                    { 
+                        type: 'why_choose_us', 
+                        label: 'Why Choose Us', 
+                        defaults: {
+                            badge_text: 'Why BromoIjen',
+                            title_prefix: 'Why Travelers',
+                            title_suffix: 'Choose Us',
+                            subtitle: '',
+                            layout: 'grid-3',
+                            items: [
+                                { icon: 'sparkles', title: 'Expert Local Guides', description: 'English-speaking guides born and raised around Bromo & Ijen.' },
+                                { icon: 'calendar', title: 'Flexible Departures', description: 'Private tours with departure dates that fit your itinerary.' },
+                                { icon: 'rocket', title: 'Best Value', description: 'Transparent pricing with no hidden costs.' },
+                                { icon: 'chat', title: '24/7 Support', description: 'Fast WhatsApp support before, during, and after your trip.' },
+                            ]
+                        } 
+                    }
+                ],
+                
+                addBlock(item) {
+                    if(!this.page.content) this.page.content = [];
+                    this.page.content.push({ type: item.type, data: JSON.parse(JSON.stringify(item.defaults)) });
+                    this.activeBlock = this.page.content.length - 1;
+                    this.refreshPreview();
+                },
+                // -----------------------------------------------
 
                 selectBlock(index) {
                     this.activeBlock = index;
@@ -830,8 +914,6 @@
                 },
 
                 updatePreview(index, field, value) {
-                    // Send debounce message or direct depending on performance, for now direct
-                    // Clone value to avoid DataCloneError with Proxies
                     const safeValue = (typeof value === 'object' && value !== null) 
                         ? JSON.parse(JSON.stringify(value)) 
                         : value;
@@ -845,33 +927,22 @@
                         field: field,
                         value: safeValue
                     }, '*');
-
                 },
 
-                // Media Picker Logic
                 pendingMedia: null,
 
                 openMediaLibrary(index, field) {
                     this.pendingMedia = { index, field };
-                    // Dispatch event to open the picker
                     this.$dispatch('open-media-picker', { eventName: 'editor-media-selected' });
                 },
 
-
-
                 init() {
-                    // Ensure data structure is complete
                     this.prepareData();
 
-                    // Debug Audit
-
-
-                    // Listen for selection event
                     window.addEventListener('editor-media-selected', (e) => {
                         this.handleMediaSelection(e.detail);
                     });
 
-                    // Listen for messages from Iframe (Drag & Drop)
                     window.addEventListener('message', (e) => {
                          if (e.data.type === 'UPDATE_SPOT_COORDS') {
                              this.handleSpotUpdate(e.data);
@@ -881,32 +952,24 @@
 
                 prepareData() {
                     this.page.content.forEach(block => {
-                        // AUTO-MIGRATE LEGACY DATA (Fix for empty forms)
+                        // AUTO-MIGRATE LEGACY DATA
                         if(['exclusive_destinations', 'package_slider', 'testimonials_marquee', 'blog_news', 'gallery'].includes(block.type)) {
-                             // Migrate Badge
                              if (!block.data.badge_text && block.data.badge) {
                                  block.data.badge_text = block.data.badge;
                              }
-                             // Migrate Title
                              if ((!block.data.title_prefix && !block.data.title_suffix) && block.data.title) {
                                  let t = block.data.title;
                                  let prefix = t;
                                  let suffix = '';
-                                 
-                                 // Attempt to parse standard pattern: "Prefix <span...>Suffix</span>"
-                                 // First check if it contains a span
                                  if (t.includes('<span')) {
-                                     // Regex to capture text before span (Prefix) and text inside span (Suffix)
                                      const match = t.match(/^(.*?)<span[^>]*>(.*?)<\/span>$/);
                                      if (match) {
-                                         prefix = match[1].trim(); // Group 1: Prefix
-                                         suffix = match[2].trim(); // Group 2: Suffix
+                                         prefix = match[1].trim();
+                                         suffix = match[2].trim();
                                      } else {
-                                         // Fallback: Strip HTML
                                          prefix = t.replace(/<[^>]*>?/gm, '').trim();
                                      }
                                  }
-                                 
                                  block.data.title_prefix = prefix;
                                  block.data.title_suffix = suffix;
                              }
@@ -919,35 +982,29 @@
                             if (typeof block.data.button_url === 'undefined') block.data.button_url = '#packages';
                             if (typeof block.data.show_button === 'undefined') block.data.show_button = true;
                             
-                            // Initialize Backgrounds Array & Migrate Legacy
                             if (!block.data.backgrounds || !Array.isArray(block.data.backgrounds)) {
                                 block.data.backgrounds = [];
-                                // If legacy data exists, move it to first slide
                                 if (block.data.media_id || block.data.video_url) {
                                     block.data.backgrounds.push({
                                         type: (block.data.video_source === 'media_library' || !block.data.video_url) ? 'media' : 'url',
                                         id: block.data.media_id || null,
                                         url: block.data.video_url || '',
-                                        mime_type: 'video/mp4' // Assume video for legacy
+                                        mime_type: 'video/mp4'
                                     });
                                 }
                             }
                         }
 
-                        // Initialize Defaults for About Us
                         if (block.type === 'about_us') {
                             if (typeof block.data.badge === 'undefined') block.data.badge = 'About BromoIjen';
                             if (typeof block.data.title === 'undefined') block.data.title = 'Experience The <span class="text-brand-primary">New Adventure</span> With Us';
                             if (typeof block.data.description === 'undefined') block.data.description = 'We organize private guided trips to Mount Bromo, Ijen Crater, and other exotic destinations in East Java. Our goal is to provide safe, comfortable, and memorable experiences for every traveler.';
                             
-                            // Features Defaults
                             if (typeof block.data.feature_1_title === 'undefined') block.data.feature_1_title = 'Trusted Travel Guide';
                             if (typeof block.data.feature_1_text === 'undefined') block.data.feature_1_text = 'Professional English speaking guides.';
-                            
                             if (typeof block.data.feature_2_title === 'undefined') block.data.feature_2_title = 'Instant Booking';
                             if (typeof block.data.feature_2_text === 'undefined') block.data.feature_2_text = 'Easy and secure online booking.';
                             
-                            // Footer Defaults
                             if (typeof block.data.show_cta === 'undefined') block.data.show_cta = true;
                             if (typeof block.data.cta_text === 'undefined') block.data.cta_text = 'Discover More';
                             if (typeof block.data.cta_url === 'undefined') block.data.cta_url = '/packages';
@@ -957,16 +1014,9 @@
                             if (typeof block.data.founder_role === 'undefined') block.data.founder_role = 'Founder, BromoIjen';
                         }
 
-                        // Initialize Defaults for Dest/Packages/Testimonials
-                        if (block.type === 'exclusive_destinations') {
-                            if (!block.data.destination_ids) block.data.destination_ids = [];
-                        }
                         if (block.type === 'package_slider') {
                             if (!block.data.package_ids) block.data.package_ids = [];
                             if (typeof block.data.badge_text === 'undefined') block.data.badge_text = 'Popular Tours';
-                            // Note: Title defaults contain HTML which is handled by component, but editor inputs plain text usually.
-                            // We can prefill a plain version or leave empty if the user hasn't edited it yet.
-                            // However, let's prefill meaningful defaults if empty.
                             if (typeof block.data.title_prefix === 'undefined') block.data.title_prefix = 'Feature';
                             if (typeof block.data.title_suffix === 'undefined') block.data.title_suffix = 'Packages';
                         }
@@ -991,7 +1041,6 @@
 
                 handleSpotUpdate(data) {
                     const { blockIndex, spotIndex, x, y } = data;
-                    // blockIndex from DOM might be string
                     const idx = parseInt(blockIndex);
                     
                     if (this.page.content[idx] && this.page.content[idx].data.spots[spotIndex]) {
@@ -1003,7 +1052,6 @@
                 handleMediaSelection(asset) {
                     if (!this.pendingMedia) return;
                     const { index, field } = this.pendingMedia;
-                    console.log(`[Media Debug] Selected Asset for Block[${index}].${field}:`, asset);
 
                     if (field === 'gallery_images') {
                         if (!this.page.content[index].data.gallery_images) this.page.content[index].data.gallery_images = [];
@@ -1026,38 +1074,30 @@
                             mime_type: asset.mime_type || asset.type
                         });
                         this.updatePreview(index, 'backgrounds', this.page.content[index].data.backgrounds);
-                        return; // Exit early
+                        return;
                     }
 
-                    // Update the data model with the Media ID
                     this.page.content[index].data[field] = asset.id;
 
-                    // Specific handling for Secondary Media
                     if (field === 'secondary_media_id') {
                         this.page.content[index].data['secondary_source_type'] = 'media_library';
-                        // Send the URL as 'secondary_image_url' so the component (which listens to this) updates instantly
                         this.updatePreview(index, 'secondary_image_url', asset.url);
                         this.updatePreview(index, 'secondary_source_type', 'media_library');
                         return;
                     }
 
-                    // Specific handling for Main Media (media_id)
                     if (field === 'media_id') {
                          if (this.page.content[index].type === 'hero_video') {
                              this.page.content[index].data['video_source'] = 'media_library';
                              this.updatePreview(index, '_live_media_url', asset.url);
                          } else {
-                             // About Us and others
                              this.page.content[index].data['source_type'] = 'media_library';
                              this.page.content[index].data['image_source'] = 'media_library';
-                             
-                             // Send both potential URL fields to cover image/video types
                              this.updatePreview(index, 'image_url', asset.url);
                              this.updatePreview(index, 'video_url', asset.url);
                              this.updatePreview(index, 'source_type', 'media_library');
                          }
                     } else {
-                        // Standard field update
                         this.updatePreview(index, field, asset.id);
                     }
                 },    
@@ -1065,18 +1105,10 @@
                 async saveChanges() {
                     this.isSaving = true;
                     
-                    // Debug Payload
                     const payload = {
                         title: this.page.title,
                         content: this.page.content
                     };
-                    console.log('Saving Payload:', JSON.parse(JSON.stringify(payload)));
-                    
-                    // Specific Debug for Backgrounds
-                    const heroBlock = this.page.content.find(b => b.type === 'hero_video');
-                    if(heroBlock) {
-                        console.log('Hero Backgrounds Saving:', heroBlock.data.backgrounds);
-                    }
 
                     try {
                         const response = await fetch('{{ route('admin.visual-editor.update', $page->id) }}', {
@@ -1091,14 +1123,10 @@
 
                         const data = await response.json();
 
-                        console.log('Server Response Debug:', data);
-
                         if (data.success) {
-                            // Show success toast
                             this.showToast = true;
                             setTimeout(() => this.showToast = false, 3000);
                             
-                            // Reload iframe after short delay to ensure DB write
                             setTimeout(() => {
                                 if (this.$refs.previewFrame && this.$refs.previewFrame.contentWindow) {
                                     this.$refs.previewFrame.contentWindow.location.reload();
@@ -1108,7 +1136,6 @@
                             alert('Error saving changes');
                         }
                     } catch (error) {
-                        console.error('Save error:', error);
                         alert('Network error occurred');
                     } finally {
                         this.isSaving = false;

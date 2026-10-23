@@ -3,6 +3,11 @@
 namespace App\Filament\Resources\Banners\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 
 class BannerForm
 {
@@ -45,6 +50,13 @@ class BannerForm
                                             ->live(),
                                         \Filament\Forms\Components\Toggle::make('is_active')
                                             ->default(true),
+
+                                        // --- TAMBAHAN DARI BRIEF EKSEKUSI ---
+                                        Toggle::make('popup_enabled')
+                                            ->label('Tampilkan sebagai Popup')
+                                            ->default(false)
+                                            ->live(),
+                                        // ------------------------------------
                                     ]),
                             ]),
                         
@@ -102,6 +114,54 @@ class BannerForm
                                     ->columns(3)
                                     ->defaultItems(1),
                             ]),
+
+                        // --- TAMBAHAN DARI BRIEF EKSEKUSI (Dibuat Tab Baru agar Rapi) ---
+                        \Filament\Schemas\Components\Tabs\Tab::make('Popup Settings')
+                            ->schema([
+                                \Filament\Schemas\Components\Section::make('Popup Configuration')
+                                    ->schema([
+                                        \Filament\Forms\Components\TextInput::make('popup_delay_seconds')
+                                            ->numeric()
+                                            ->default(3)
+                                            ->label('Delay tampil (detik)'),
+                                            
+                                        \Filament\Forms\Components\Select::make('popup_frequency')
+                                            ->options([
+                                                'once_per_user' => 'Sekali per user (permanen)',
+                                                'once_per_session' => 'Sekali per sesi',
+                                                'every_n_days' => 'Berulang tiap N hari',
+                                                'always' => 'Setiap kunjungan',
+                                            ])
+                                            ->default('once_per_user')
+                                            ->live(),
+                                            
+                                        \Filament\Forms\Components\TextInput::make('popup_interval_days')
+                                            ->numeric()
+                                            ->default(30)
+                                            ->label('Interval hari')
+                                            ->visible(fn ($get) => $get('popup_frequency') === 'every_n_days'),
+                                            
+                                        \Filament\Forms\Components\Select::make('popup_device')
+                                            ->options([
+                                                'all' => 'Semua device', 
+                                                'mobile' => 'Mobile saja', 
+                                                'desktop' => 'Desktop saja',
+                                            ])
+                                            ->default('all'),
+                                            
+                                        \Filament\Forms\Components\TextInput::make('popup_max_width')
+                                            ->numeric()
+                                            ->default(480)
+                                            ->label('Lebar maksimum (px)'),
+                                            
+                                        \Filament\Forms\Components\TagsInput::make('popup_pages')
+                                            ->placeholder('* untuk semua, atau slug: home, packages, blogs')
+                                            ->default(['*']),
+                                    ])
+                                    ->columns(2),
+                            ])
+                            ->visible(fn ($get) => $get('popup_enabled')),
+                        // ---------------------------------------------------------------
                     ])->columnSpanFull(),
             ]);
     }

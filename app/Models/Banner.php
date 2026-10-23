@@ -23,6 +23,13 @@ class Banner extends Model
         'placements',
         'start_date',
         'end_date',
+        'popup_enabled',
+        'popup_delay_seconds',
+        'popup_frequency',
+        'popup_interval_days',
+        'popup_pages',
+        'popup_device',
+        'popup_max_width',
     ];
 
     protected $casts = [
@@ -30,5 +37,7 @@ class Banner extends Model
         'placements' => 'array',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'popup_enabled' => 'boolean',
+        'popup_pages' => 'array',
     ];
 }

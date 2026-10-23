@@ -248,6 +248,10 @@
                         <x-blocks.text_section :data="$data" />
                         @break
 
+                    @case('why_choose_us')
+                        <x-sections.why-choose-us :data="$data" />
+                        @break
+
                 @endswitch
             </div>
         @endforeach

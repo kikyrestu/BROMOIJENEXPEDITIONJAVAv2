@@ -340,6 +340,8 @@
     @if($floatingSocialEnabled)
         <x-floating-social-bar :socials="$socialLinks" :showBackToTop="true" />
     @endif
+    
+    <x-popup-overlay />
 
     {{-- Footer --}}
     @php
